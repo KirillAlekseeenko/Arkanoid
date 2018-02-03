@@ -10,22 +10,9 @@ public class Level {
 
 	[SerializeField] private int number;
 
-	public Transform DestroyableBlocks {
-		get {
-			return destroyableBlocks;
-		}
-	}
+	public Transform DestroyableBlocks { get { return destroyableBlocks; } }
+	public Transform StaticBlocks { get { return staticBlocks; } }
 
-	public Transform StaticBlocks {
-		get {
-			return staticBlocks;
-		}
-	}
-
-	public int Number {
-		get {
-			return number;
-		}
-	}
+	public int Number { get { return number; } }
 }
 

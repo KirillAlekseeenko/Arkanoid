@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class LevelGeneration : MonoBehaviour {
 
-	void Start()
-	{
-		
-	}
-
 	[SerializeField] private List<Level> levelList;
 
 	public Level FirstLevel()
@@ -24,7 +19,6 @@ public class LevelGeneration : MonoBehaviour {
 
 		if (levelList.Count > level.Number) {
 			var newLevel = levelList [level.Number];
-			//newLevel.DestroyableBlocks.transform.parent.gameObject.SetActive (true);
 			return newLevel;
 		} else {
 			return null;

@@ -28,17 +28,9 @@ public class MovingEnemy : Enemy, IHittable {
 
 	#region IHittable implementation
 
-	public Vector3 Position {
-		get {
-			return transform.position;
-		}
-	}
+	public Vector3 Position { get { return transform.position; } }
 
-	public int RewardPoints {
-		get {
-			return rewardPoints;
-		}
-	}
+	public int RewardPoints { get { return rewardPoints; } }
 
 	public void Hit ()
 	{

@@ -10,7 +10,7 @@ public abstract class Block : MonoBehaviour, IHittable {
 
 	private const float illuminationTime = 0.2f;
 	private const int illuminationSteps = 10;
-	private const float fadedAlpha = 0.7f;
+	private const float fadedAlpha = 0.2f;
 
 	protected void Start()
 	{
@@ -21,17 +21,9 @@ public abstract class Block : MonoBehaviour, IHittable {
 
 	public abstract void Hit ();
 
-	public int RewardPoints {
-		get {
-			return rewardPoints;
-		}
-	}
+	public int RewardPoints { get { return rewardPoints; } }
 
-	public Vector3 Position{
-		get {
-			return transform.position;
-		}
-	}
+	public Vector3 Position{ get { return transform.position; } }
 
 	#endregion
 
@@ -47,7 +39,8 @@ public abstract class Block : MonoBehaviour, IHittable {
 		for (int i = -illuminationSteps + 1; i <= illuminationSteps; i++) {
 			yield return new WaitForSeconds (illuminationTime / illuminationSteps);
 			var newAlpha = fadedAlpha + Mathf.Sign (i) * i * (1.0f - fadedAlpha) / illuminationSteps;
-			spriteRenderer.color = new Color (1, 1, 1, newAlpha);
+			var color = spriteRenderer.color;
+			spriteRenderer.color = new Color (color.r, color.b, color.b, newAlpha);
 		}
 	}
 

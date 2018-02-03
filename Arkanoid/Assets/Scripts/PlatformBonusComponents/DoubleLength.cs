@@ -31,8 +31,11 @@ public class DoubleLength : PlatformBonusComponent {
 	}
 	private void scaleCollider(float multiplier)
 	{
-		foreach (var point in GetComponent<EdgeCollider2D>().points) {
-			point.Set (point.x * multiplier, point.y);
+		var points = GetComponent<EdgeCollider2D> ().points;
+		var newPoints = new Vector2[points.Length];
+		for (int i = 0; i < points.Length; i++) {
+			newPoints [i] = new Vector2 (points [i].x * multiplier, points [i].y);
 		}
+		GetComponent<EdgeCollider2D> ().points = newPoints;
 	}
 }

@@ -13,8 +13,6 @@ public class Gun : PlatformBonusComponent {
 
 	protected void Start () {
 		bulletPrefab = GetComponent<Platform> ().BulletPrefab;
-		leftSpawn = GetComponent<Platform> ().LeftSpawn;
-		rightSpawn = GetComponent<Platform> ().RightSpawn;
 		reloadTime = GetComponent<Platform> ().ReloadTime;
 
 		bulletSpawnerCoroutine = StartCoroutine (bulletSpawn ());
@@ -22,15 +20,15 @@ public class Gun : PlatformBonusComponent {
 
 	private void spawnBullet(Vector3 place)
 	{
-		Instantiate (bulletPrefab.gameObject, place, Quaternion.identity);
+		Instantiate (bulletPrefab.gameObject, place, Quaternion.identity, transform);
 	}
 
 	private IEnumerator bulletSpawn()
 	{
 		while (true) {
 			yield return new WaitForSeconds (reloadTime);
-			spawnBullet (leftSpawn);
-			spawnBullet (rightSpawn);
+			spawnBullet (GetComponent<Platform> ().LeftSpawn);
+			spawnBullet (GetComponent<Platform> ().RightSpawn);
 		}
 	}
 		

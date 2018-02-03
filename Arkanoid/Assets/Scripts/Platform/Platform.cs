@@ -10,6 +10,8 @@ public class Platform : MonoBehaviour {
 	[SerializeField] private float speed;
 	[SerializeField] private float maxDirectionAngle;
 
+	private float xRightWallPosition;
+
 	private float halfLength { get { return Mathf.Abs(GetComponent<EdgeCollider2D> ().points [0].x); } }
 	private float yDirection { get { return tangentMaxDirectionAngle * halfLength; } }
 	private float tangentMaxDirectionAngle;
@@ -19,30 +21,19 @@ public class Platform : MonoBehaviour {
 	[SerializeField] private float bulletSpawnHeight;
 	[SerializeField] private float reloadTime;
 
-	public Bullet BulletPrefab {
-		get {
-			return bulletPrefab;
-		}
-	}
+	public Bullet BulletPrefab { get { return bulletPrefab; } }
 
-	public float ReloadTime {
-		get {
-			return reloadTime;
-		}
-	}
+	public float ReloadTime { get { return reloadTime; } }
 
-	public Vector3 LeftSpawn { get { return new Vector3(-halfLength, transform.position.y + bulletSpawnHeight); } }
-	public Vector3 RightSpawn { get { return new Vector3(halfLength, transform.position.y + bulletSpawnHeight); } }
-
-
+	public Vector3 LeftSpawn { get { return transform.position + new Vector3 (-halfLength, bulletSpawnHeight); } }
+	public Vector3 RightSpawn { get { return transform.position + new Vector3 (halfLength, bulletSpawnHeight); } }
 
 	#region MonoBehaviour
 
 	void Start () {
+		xRightWallPosition = Mathf.Abs(GameManager.Instance.CommonReferences.RightWallPosition.x);
 		tangentMaxDirectionAngle = Mathf.Tan (maxDirectionAngle * Mathf.Deg2Rad);
 		rigidbodyComponent = GetComponent<Rigidbody2D> ();
-
-
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -77,12 +68,14 @@ public class Platform : MonoBehaviour {
 
 	public void MoveLeft()
 	{
-		rigidbodyComponent.velocity = Vector2.left * speed;
+		transform.Translate (Vector3.left * Time.deltaTime * speed, Space.World);
+		clampPosition ();
 	}
 
 	public void MoveRight()
 	{
-		rigidbodyComponent.velocity = Vector2.right * speed;
+		transform.Translate (Vector3.right * Time.deltaTime * speed, Space.World);
+		clampPosition ();
 	}
 
 	public void Stop()
@@ -97,4 +90,10 @@ public class Platform : MonoBehaviour {
 	}
 
 	#endregion
+
+	private void clampPosition()
+	{
+		var clampXValue = xRightWallPosition - halfLength;
+		transform.position = new Vector3(Mathf.Clamp(transform.position.x, -clampXValue , clampXValue), transform.position.y);
+	}
 }

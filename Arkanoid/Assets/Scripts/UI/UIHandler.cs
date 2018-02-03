@@ -67,11 +67,14 @@ public class UIHandler : MonoBehaviour {
 	public void OnStartGame()
 	{
 		pressBarLabel.gameObject.GetComponent<Animator> ().SetBool ("Visible", false);
+		levelNumberLabel.gameObject.GetComponent<Animator> ().SetBool ("Visible", false);
 	}
 
-	public void OnResetGame()
+	public void OnResetGame(int levelNumber)
 	{
 		pressBarLabel.gameObject.GetComponent<Animator> ().SetBool ("Visible", true);
+		levelNumberLabel.text = "LEVEL " + levelNumber.ToString ();
+		levelNumberLabel.gameObject.GetComponent<Animator> ().SetBool ("Visible", true);
 	}
 
 	public void OnPauseGame()

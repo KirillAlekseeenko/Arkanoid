@@ -10,11 +10,28 @@ public class MainMenuRecordsUIHandler : MonoBehaviour {
 
 	void Start()
 	{
+		fillRecords ();
+	}
+
+	private void fillRecords()
+	{
 		var records = SaveUtils.RecordsSaveUtility.LoadRecords ();
-		foreach (SaveUtils.Session session in records) {
-			var text = Instantiate (textPrefab.gameObject, recordList.transform).GetComponent<Text>();
-			text.text = session.Name + " - " + session.Score;
+		for (int i = 0; i < records.MaxSessionCount; i++) {
+			var label = Instantiate (textPrefab, recordList.transform).GetComponent<Text> ();
+			label.text = printNumber (i + 1);
+			if (i < records.Count) {
+				label.text += records [i].ToString ();
+			}
 		}
+	}
+
+	private string printNumber(int number)
+	{
+		var str = number.ToString () + ". ";
+		if (number < 10) {
+			str += "  ";
+		}
+		return str;
 	}
 
 	public void OnBackButton()

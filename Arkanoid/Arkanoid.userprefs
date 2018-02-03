@@ -1,11 +1,15 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj" RefactoringSettings.EnableRefactorings="True">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/SphereMovement.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Teleport.cs">
     <Files>
-      <File FileName="Assets/Scripts/Bullet.cs" Line="19" Column="20" />
-      <File FileName="Assets/Scripts/Border.cs" Line="7" Column="41" />
-      <File FileName="Assets/Scripts/SphereMovement.cs" Line="30" Column="57" />
-      <File FileName="Assets/Scripts/Platform.cs" Line="33" Column="4" />
+      <File FileName="Assets/Scripts/GameManager/AudioManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/MainMenu/MainMenuSettingsUIHandler.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/MainMenu/MainMenuNameUIHandler.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Support/Settings.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Support/Session.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Static/SaveUtils.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/GameManager/GameManager.cs" Line="294" Column="11" />
+      <File FileName="Assets/Scripts/Teleport.cs" Line="7" Column="41" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

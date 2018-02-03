@@ -11,14 +11,7 @@ public class SphereMovement : MonoBehaviour {
 	[SerializeField] private float minimumY;
 	private float xToMinimumY;
 
-	public float VelocityMagnitude {
-		get {
-			return velocityMagnitude;
-		}
-		set{
-			velocityMagnitude = value;
-		}
-	}
+	public float VelocityMagnitude { get { return velocityMagnitude; } set { velocityMagnitude = value; } }
 
 	#region MonoBehaviour
 
@@ -31,8 +24,11 @@ public class SphereMovement : MonoBehaviour {
 	{
 		var hittable = other.gameObject.GetComponent<IHittable> ();
 		if (hittable != null) {
-			hittable.Hit();
+			hittable.Hit ();
+			AudioManager.Instance.PlayOnBlockHitEffect ();
 			correctCourse ();
+		} else if (other.gameObject.layer == LayerMask.NameToLayer ("Wall")) {
+			AudioManager.Instance.PlayOnWallHitEffect ();
 		}
 	}
 

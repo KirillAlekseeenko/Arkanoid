@@ -4,92 +4,58 @@ using UnityEngine;
 
 public static class SaveUtils
 {
+	private static class SaveUtility<T>
+	{
+		public static void Save(string key, T par)
+		{
+			PlayerPrefs.SetString(key, JsonUtility.ToJson(par));
+		}
+		public static T Load(string key, T returnValue)
+		{
+			if (PlayerPrefs.HasKey (key)) {
+				return JsonUtility.FromJson<T> (PlayerPrefs.GetString (key));
+			} else {
+				return returnValue;
+			}
+		}
+	}
 	public static class SettingsSaveUtility
 	{
+		private const string key = "SETTINGS";
+
 		public static void SaveSettings(Settings settings)
 		{
-			PlayerPrefs.SetString("SETTINGS", JsonUtility.ToJson(settings));
+			SaveUtility<Settings>.Save (key, settings);
 		}
 		public static Settings LoadSettings()
 		{
-			if (PlayerPrefs.HasKey ("SETTINGS")) {
-				return JsonUtility.FromJson<Settings> (PlayerPrefs.GetString ("SETTINGS"));
-			} else {
-				return new Settings ();
-			}
+			return SaveUtility<Settings>.Load (key, new Settings ());
 		}
 	}
 	public static class RecordsSaveUtility
 	{
+		private const string key = "RECORDS";
+
 		public static void SaveRecords(Records records)
 		{
-			PlayerPrefs.SetString("RECORDS", JsonUtility.ToJson(records));
+			SaveUtility<Records>.Save (key, records);
 		}
 		public static Records LoadRecords()
 		{
-			if (PlayerPrefs.HasKey ("RECORDS")) {
-				return JsonUtility.FromJson<Records> (PlayerPrefs.GetString ("RECORDS"));
-			} else {
-				return new Records ();
-			}
+			return SaveUtility<Records>.Load (key, new Records ());
 		}
 	}
-	[System.Serializable]
-	public class Session
+	public static class PlayerNameSaveUtility
 	{
-		[SerializeField] private string name;
-		[SerializeField] private int score;
-		public Session(string _name)
+		private const string key = "PLAYERNAME";
+
+		public static void SaveName(string name)
 		{
-			name = _name;
-			score = 0;
+			PlayerPrefs.SetString(key, name);
 		}
-
-		public string Name {
-			get {
-				return name;
-			}
-		}
-
-		public int Score {
-			get {
-				return score;
-			}
-			set {
-				score = value;
-			}
-		}
-	}
-	[System.Serializable]
-	public class Records : IEnumerable
-	{
-		[SerializeField] private List<Session> sessionList;
-
-		public Records()
+		public static string LoadName()
 		{
-			sessionList = new List<Session>();
+			return PlayerPrefs.GetString (key);
 		}
-		public void AddSession(Session session)
-		{
-			int index = 0;
-			while (index < sessionList.Count && sessionList[index].Score > session.Score) {
-				index++;
-			}
-			sessionList.Insert (index, session);
-		}
-
-		#region IEnumerable implementation
-
-		public IEnumerator GetEnumerator ()
-		{
-			return sessionList.GetEnumerator ();
-		}
-
-		#endregion
-
-	}
-	public class Settings
-	{
-		// audio settings
 	}
 }
