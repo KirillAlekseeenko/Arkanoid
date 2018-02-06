@@ -7,7 +7,7 @@ public class Border : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.gameObject.layer == LayerMask.NameToLayer ("Sphere")) {
-			GameManager.Instance.CheckLostConditions ();
+			GameManager.Instance.SphereLost ();
 		}
 		Destroy (other.gameObject);
 	}

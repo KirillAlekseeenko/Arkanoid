@@ -16,9 +16,12 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private Transform spheres;
 	[SerializeField] private Transform bonuses;
 
-	private bool isStarted = false;
-	private bool isEnded = false;
-	private bool isPaused = false;
+	private int sphereCount;
+	private int blocksCount;
+
+	[SerializeField] private bool isStarted = false;
+	[SerializeField] private bool isEnded = false;
+	[SerializeField] private bool isPaused = false;
 	private bool transition = false;
 
 	[SerializeField] private int scoreToGetReward;
@@ -110,6 +113,8 @@ public class GameManager : MonoBehaviour {
 	{
 		score = 0;
 		currentLevel = levels.FirstLevel ();
+		sphereCount = 1;
+		blocksCount = currentLevel.DestroyableBlocks.childCount;
 		sphereInitialPosition = sphere.transform.position;
 		platformInitialPosition = platform.transform.position;
 	}
@@ -123,13 +128,17 @@ public class GameManager : MonoBehaviour {
 
 	#endregion
 
-	public void HandleDestroyedHittable(IHittable hittable)
+	public void HittableDestroyed(IHittable hittable)
 	{
 		var oldScore = score;
 		score += hittable.RewardPoints;
 		uiHandler.UpdateScore (score);
-		checkWinConditions ();
 		spawnBonus (hittable.Position, oldScore);
+
+		if (hittable is Block) {
+			blocksCount--;
+			checkWinConditions ();
+		}
 	}
 
 	public void PauseHandle()
@@ -142,9 +151,10 @@ public class GameManager : MonoBehaviour {
 			pauseGame();
 	}
 
-	public void CheckLostConditions()
+	public void SphereLost()
 	{
-		if (spheres.childCount <= 1 && !transition) { // last sphere
+		sphereCount--;
+		if (sphereCount == 0 && !transition) { // last sphere
 			OnLifeLost();
 			if (lifeCount > 0) {
 				resetGameState ();
@@ -180,7 +190,7 @@ public class GameManager : MonoBehaviour {
 
 	public void SpawnSpheres()
 	{
-		if (spheres.childCount > 1)
+		if (sphereCount > 1)
 			return;
 		if (platform.GetComponent<StickyPlatform> () != null) {
 			spheres.GetChild (0).GetComponent<SphereMovement> ().Kick (Vector3.up);
@@ -188,8 +198,9 @@ public class GameManager : MonoBehaviour {
 		Vector2 direction = spheres.GetChild (0).GetComponent<Rigidbody2D> ().velocity;
 		Vector3 pos = spheres.GetChild (0).transform.position;
 		for (int i = -1; i <= 1; i+=2) {
-			var newSphere = Instantiate (spherePrefab, pos, Quaternion.identity, spheres) as GameObject;
-			newSphere.GetComponent<Rigidbody2D> ().velocity = Utils.RotateVector (direction, 30.0f * Mathf.Deg2Rad * i);
+			sphereCount++;
+			var newSphere = Instantiate (spherePrefab, pos, Quaternion.identity, spheres);
+			newSphere.GetComponent<Rigidbody2D>().velocity = Utils.RotateVector (direction, 60.0f * Mathf.Deg2Rad * i);
 		}
 	}
 
@@ -253,7 +264,7 @@ public class GameManager : MonoBehaviour {
 			Destroy (enemy.gameObject);
 		}
 		sphere = Instantiate (spherePrefab, spheres).GetComponent<SphereMovement>();
-
+		sphereCount = 1;
 		sphere.transform.position = sphereInitialPosition;
 		platform.transform.position = platformInitialPosition;
 		uiHandler.OnResetGame (currentLevel.Number);
@@ -281,7 +292,7 @@ public class GameManager : MonoBehaviour {
 
 	private void checkWinConditions()
 	{
-		if (currentLevel.DestroyableBlocks.childCount <= 1) { // last block
+		if (blocksCount == 0) { // last block
 			onLevelPassed();
 		}
 	}
@@ -289,6 +300,7 @@ public class GameManager : MonoBehaviour {
 	private void onLevelPassed()
 	{
 		currentLevel = levels.GetNextLevel (currentLevel);
+		blocksCount = currentLevel.DestroyableBlocks.childCount;
 		AudioManager.Instance.PlayOnLevelPassedEffect ();
 		if (currentLevel == null) {
 			win ();
@@ -338,9 +350,9 @@ public class GameManager : MonoBehaviour {
 
 	private void resumeGame ()
 	{
+		Time.timeScale = 1;
 		isPaused = false;
 		uiHandler.OnResumeGame ();
-		Time.timeScale = 1;
 	}
 
 	private void spawnBonus(Vector3 position, int oldScore)
@@ -355,9 +367,7 @@ public class GameManager : MonoBehaviour {
 	{
 		while (true) {
 			foreach (Transform sphereTransform in spheres) {
-				var oldMagnitude = sphereTransform.gameObject.GetComponent<SphereMovement> ().VelocityMagnitude;
 				sphereTransform.gameObject.GetComponent<SphereMovement> ().VelocityMagnitude = sphereVelocity;
-				sphereTransform.gameObject.GetComponent<Rigidbody2D> ().velocity *= (sphereVelocity / oldMagnitude);
 			}
 			yield return new WaitForSeconds (0.5f);
 		}

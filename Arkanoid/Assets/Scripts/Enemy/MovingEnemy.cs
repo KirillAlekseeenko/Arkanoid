@@ -34,6 +34,8 @@ public class MovingEnemy : Enemy, IHittable {
 
 	public void Hit ()
 	{
+		GameManager.Instance.HittableDestroyed (this);
+		AudioManager.Instance.PlayOnBlockHitEffect ();
 		Destroy (gameObject);
 	}
 

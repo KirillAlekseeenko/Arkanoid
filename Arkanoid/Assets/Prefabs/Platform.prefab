@@ -76,7 +76,7 @@ EdgeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.12}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.43
   m_Points:
   - {x: -0.5, y: 0}
   - {x: 0.5, y: 0}
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d76566f081d9b4270ab7a624b0779b86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 7
   maxDirectionAngle: 30
   bulletPrefab: {fileID: 114128620287530108, guid: 9c7b52139f5df47829f950d0bf808e1d,
     type: 2}

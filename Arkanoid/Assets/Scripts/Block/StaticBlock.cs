@@ -6,6 +6,7 @@ public class StaticBlock : Block {
 	
 	public override void Hit ()
 	{
+		AudioManager.Instance.PlayOnStaticBlockHitEffect ();
 		illumination ();
 	}
 }

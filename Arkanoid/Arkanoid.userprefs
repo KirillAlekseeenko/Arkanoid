@@ -1,15 +1,18 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj" RefactoringSettings.EnableRefactorings="True">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Teleport.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Bullet.cs">
     <Files>
-      <File FileName="Assets/Scripts/GameManager/AudioManager.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/MainMenu/MainMenuSettingsUIHandler.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/MainMenu/MainMenuNameUIHandler.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Support/Settings.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Support/Session.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Static/SaveUtils.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/GameManager/GameManager.cs" Line="294" Column="11" />
-      <File FileName="Assets/Scripts/Teleport.cs" Line="7" Column="41" />
+      <File FileName="Assets/Scripts/SphereMovement.cs" Line="140" Column="60" />
+      <File FileName="Assets/Scripts/Block/Block.cs" Line="24" Column="3" />
+      <File FileName="Assets/Scripts/Static/Utils.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Platform/Platform.cs" Line="41" Column="67" />
+      <File FileName="Assets/Scripts/PlatformBonusComponents/StickyPlatform.cs" Line="58" Column="93" />
+      <File FileName="Assets/Scripts/Enemy/Enemy.cs" Line="13" Column="3" />
+      <File FileName="Assets/Scripts/Enemy/Splinter.cs" Line="14" Column="44" />
+      <File FileName="Assets/Scripts/Enemy/RedEnemy.cs" Line="25" Column="33" />
+      <File FileName="Assets/Scripts/GameManager/GameManager.cs" Line="125" Column="63" />
+      <File FileName="Assets/Scripts/Block/DynamicBlock.cs" Line="9" Column="1" />
+      <File FileName="Assets/Scripts/Bullet.cs" Line="18" Column="61" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

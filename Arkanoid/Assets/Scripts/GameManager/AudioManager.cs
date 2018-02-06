@@ -27,7 +27,9 @@ public class AudioManager : MonoBehaviour {
 	[SerializeField] private AudioClip onLevelPassedClip;
 
 	[SerializeField] private AudioClip onBlockHitClip;
+	[SerializeField] private AudioClip onStaticBlockHitClip;
 	[SerializeField] private AudioClip onWallHitClip;
+	[SerializeField] private AudioClip onPlatformHitClip;
 
 	private float musicVolume;
 	private float effectsVolume;
@@ -80,10 +82,22 @@ public class AudioManager : MonoBehaviour {
 		effectSource.PlayOneShot (onBlockHitClip);
 	}
 
+	public void PlayOnStaticBlockHitEffect()
+	{
+		randomizePitch ();
+		effectSource.PlayOneShot (onStaticBlockHitClip);
+	}
+
 	public void PlayOnWallHitEffect()
 	{
 		randomizePitch ();
 		effectSource.PlayOneShot (onWallHitClip);
+	}
+
+	public void PlayOnPlatformHitEffect()
+	{
+		randomizePitch ();
+		effectSource.PlayOneShot (onPlatformHitClip);
 	}
 
 	#endregion

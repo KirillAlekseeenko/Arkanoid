@@ -10,6 +10,13 @@ public class Splinter : Enemy {
 	{
 		GetComponent<Rigidbody2D> ().velocity = getRandomSplinterVelocity () * speed;
 	}
+
+	void OnCollisionEnter2D(Collision2D other)
+	{
+		if (other.gameObject.layer == LayerMask.NameToLayer ("Platform")) {
+			GameManager.Instance.Lost ();
+		}
+	}
 	
 	private Vector2 getRandomSplinterVelocity()
 	{

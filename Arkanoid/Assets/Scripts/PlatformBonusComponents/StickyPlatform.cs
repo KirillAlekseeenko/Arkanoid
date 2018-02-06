@@ -43,6 +43,7 @@ public class StickyPlatform : PlatformBonusComponent {
 	public override void SpecialAction ()
 	{
 		if (spheresOnThePlatform.Count > 0 && isKickPossible) {
+			AudioManager.Instance.PlayOnPlatformHitEffect ();
 			kickOneSphere ();
 			StartCoroutine (reload ());
 		}
@@ -52,8 +53,17 @@ public class StickyPlatform : PlatformBonusComponent {
 
 	public void AddSphere(SphereMovement sphere, Vector2 direction)
 	{
+		stabilizeSphere (sphere);
 		var relativePosition = sphere.transform.position - transform.position;
 		spheresOnThePlatform.AddFirst(new StickySphereInfo (sphere, direction, relativePosition));
+	}
+
+	private void stabilizeSphere(SphereMovement sphere)
+	{
+		var halfLength = GetComponent<Platform> ().HalfLength;
+		var xRelativePos = Mathf.Clamp(sphere.transform.position.x - transform.position.x, -halfLength, halfLength);
+		var yRelativePos = GetComponent<EdgeCollider2D> ().edgeRadius + sphere.GetComponent<CircleCollider2D>().radius;
+		sphere.transform.position = transform.position + new Vector3 (xRelativePos, yRelativePos);
 	}
 
 	private void kickOneSphere()

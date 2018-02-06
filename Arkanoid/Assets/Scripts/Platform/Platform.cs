@@ -12,8 +12,8 @@ public class Platform : MonoBehaviour {
 
 	private float xRightWallPosition;
 
-	private float halfLength { get { return Mathf.Abs(GetComponent<EdgeCollider2D> ().points [0].x); } }
-	private float yDirection { get { return tangentMaxDirectionAngle * halfLength; } }
+	public float HalfLength { get { return Mathf.Abs(GetComponent<EdgeCollider2D> ().points [0].x); } }
+	private float yDirection { get { return tangentMaxDirectionAngle * HalfLength; } }
 	private float tangentMaxDirectionAngle;
 
 	[Header("GunProperties")]
@@ -25,8 +25,8 @@ public class Platform : MonoBehaviour {
 
 	public float ReloadTime { get { return reloadTime; } }
 
-	public Vector3 LeftSpawn { get { return transform.position + new Vector3 (-halfLength, bulletSpawnHeight); } }
-	public Vector3 RightSpawn { get { return transform.position + new Vector3 (halfLength, bulletSpawnHeight); } }
+	public Vector3 LeftSpawn { get { return transform.position + new Vector3 (-HalfLength, bulletSpawnHeight); } }
+	public Vector3 RightSpawn { get { return transform.position + new Vector3 (HalfLength, bulletSpawnHeight); } }
 
 	#region MonoBehaviour
 
@@ -54,6 +54,7 @@ public class Platform : MonoBehaviour {
 			var direction = new Vector2 (sphere.transform.position.x - transform.position.x, yDirection);
 			var sticky = GetComponent<StickyPlatform> ();
 			if (sticky == null) {
+				AudioManager.Instance.PlayOnPlatformHitEffect ();
 				sphere.Kick (direction);
 			} else {
 				sphere.Stop ();
@@ -93,7 +94,7 @@ public class Platform : MonoBehaviour {
 
 	private void clampPosition()
 	{
-		var clampXValue = xRightWallPosition - halfLength;
+		var clampXValue = xRightWallPosition - HalfLength;
 		transform.position = new Vector3(Mathf.Clamp(transform.position.x, -clampXValue , clampXValue), transform.position.y);
 	}
 }

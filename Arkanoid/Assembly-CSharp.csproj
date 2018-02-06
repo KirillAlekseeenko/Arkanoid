@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Block\Block.cs" />
      <Compile Include="Assets\Scripts\Block\DynamicBlock.cs" />
+     <Compile Include="Assets\Scripts\Block\GreyBlock.cs" />
      <Compile Include="Assets\Scripts\Block\StaticBlock.cs" />
      <Compile Include="Assets\Scripts\Bonus\Bonus.cs" />
      <Compile Include="Assets\Scripts\Bonus\DarkBlueBonus.cs" />
@@ -74,7 +75,6 @@
      <Compile Include="Assets\Scripts\GameManager\AudioManager.cs" />
      <Compile Include="Assets\Scripts\GameManager\CommonReferences.cs" />
      <Compile Include="Assets\Scripts\GameManager\GameManager.cs" />
-     <Compile Include="Assets\Scripts\GreyBlock.cs" />
      <Compile Include="Assets\Scripts\IHittable.cs" />
      <Compile Include="Assets\Scripts\Level\Level.cs" />
      <Compile Include="Assets\Scripts\Level\LevelGeneration.cs" />

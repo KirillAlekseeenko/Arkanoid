@@ -116,6 +116,7 @@ public class UIHandler : MonoBehaviour {
 	}
 	public void OnResumeButton()
 	{
+		Debug.Log ("Pause");
 		GameManager.Instance.PauseHandle ();
 	}
 

@@ -44,9 +44,9 @@ public class MainMenuSettingsUIHandler : MonoBehaviour {
 		musicSlider.value = settings.MusicVolume;
 		effectsSlider.value = settings.EffectsVolume;
 
-		AudioManager.Instance.SetAudioVolume (settings.AudioVolume);
 		AudioManager.Instance.SetMusicVolume (settings.MusicVolume);
 		AudioManager.Instance.SetEffectsVolume (settings.EffectsVolume);
+		AudioManager.Instance.SetAudioVolume (settings.AudioVolume);
 
 		audioSlider.onValueChanged.AddListener (OnAudioValueChanged);
 		musicSlider.onValueChanged.AddListener (OnMusicValueChanged);

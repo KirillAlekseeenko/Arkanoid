@@ -6,6 +6,7 @@ public class DynamicBlock : Block {
 
 	public override void Hit ()
 	{
+		AudioManager.Instance.PlayOnBlockHitEffect ();
 		this.destroy ();
 	}
 }

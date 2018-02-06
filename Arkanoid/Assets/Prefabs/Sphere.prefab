@@ -52,7 +52,7 @@ Rigidbody2D:
   m_GameObject: {fileID: 1518329757526446}
   m_BodyType: 0
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
@@ -61,7 +61,7 @@ Rigidbody2D:
   m_Material: {fileID: 6200000, guid: 8cf7878bf3cc441cf9b7cfdd0ed1f44a, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!58 &58504516412777538
 CircleCollider2D:

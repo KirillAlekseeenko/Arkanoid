@@ -20,9 +20,9 @@ public class RedEnemy : SpecialEnemy {
 		base.Start ();
 	}
 
-	private new void OnCollisionEnter2D(Collision2D other)
+	private new void OnTriggerEnter2D(Collider2D other)
 	{
-		base.OnCollisionEnter2D (other);
+		base.OnTriggerEnter2D (other);
 		if (other.gameObject.layer == LayerMask.NameToLayer("Wall")) {
 			Destroy (gameObject);
 		}

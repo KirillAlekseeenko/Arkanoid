@@ -13,4 +13,11 @@ public static class Utils {
 		float y = Mathf.Sin (angle) * vector.x + Mathf.Cos (angle) * vector.y;
 		return new Vector2 (x, y);
 	}
+	/// <summary>
+	/// Distance between object1 and object2.
+	/// </summary>
+	public static float Distance(Transform object1, Transform object2)
+	{
+		return (object1.position - object2.position).magnitude;
+	}
 }

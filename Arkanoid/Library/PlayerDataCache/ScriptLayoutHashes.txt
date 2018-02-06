@@ -109,6 +109,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.GreyBonus
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MainCamera
 dc07d7ad69b399a46e92c483bf1c04ca UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsTracker
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.Bullet
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
@@ -117,7 +118,7 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 80dd8655eeba5280a2b253e4800077bd Assembly-CSharp.dll:.BlueEnemy
-1e9d1b5e6a2d56d3d2811b46a12b323a Assembly-CSharp.dll:.StaticBlock
+abf51ea971efc0071542cec53e9fa368 Assembly-CSharp.dll:.StaticBlock
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.GreenBonus
 646e688a4614795f865836c07df15ebc Assembly-CSharp.dll:.UserInput
 e85b8a6e16ddf1bae8bf728b662633e3 Assembly-CSharp.dll:.LevelGeneration
@@ -138,10 +139,10 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 73843688b51256aed059f049c540bca8 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformChild
 528ea1fd7c01796fc60c4e2f172ea229 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.LightBlueBonus
-2c96f6306bb6a92cfcd8acfc27829a96 Assembly-CSharp.dll:.GreyBlock
+d32144bf0a0940b14d3eca81793cbd95 Assembly-CSharp.dll:.GreyBlock
 5770a5d612bd86e7c6531178f5c26ca0 Assembly-CSharp.dll:.UIHandler
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.DoubleLength
-1e9d1b5e6a2d56d3d2811b46a12b323a Assembly-CSharp.dll:.DynamicBlock
+abf51ea971efc0071542cec53e9fa368 Assembly-CSharp.dll:.DynamicBlock
 61ee27c71856c63f94bafae2e6d599bd Assembly-CSharp.dll:.ReferencesUIHandler
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
 2a56361227def9f56c2cf57a88b32f4d UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.PlaymodeTestsController
@@ -150,6 +151,7 @@ e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEng
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.RedBonus
 e0f7ffd5d5c2abe4b2e16569a21163da UnityEngine.GoogleAudioSpatializer.dll:UnityEngine.Experimental.Audio.Google.GvrAudioRoom
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.PurpleBonus
+27c9dd2ff6943f0c32aa08c20639db09 Assembly-CSharp.dll:.CommonReferences
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
@@ -157,12 +159,13 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 c9d0e3775ff2907c6b211ed3b7248a9f Assembly-CSharp.dll:.RedEnemy
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
-ac332c39a08e3831fbf2f88a888a5abe Assembly-CSharp.dll:.GameManager
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.OnButtonEffects
+dd46c1a002c73214d187cc9623b6f063 Assembly-CSharp.dll:.AudioManager
+de49477cfdb9cb6d7c7e0aa6e7c58090 Assembly-CSharp.dll:.GameManager
 50192c684b665fec37d71328c02f5a34 Assembly-CSharp.dll:.MovingEnemy
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Gun
-05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MainMenuSettingsUIHandler
+a4456554ac451f4ed793724eb55a8378 Assembly-CSharp.dll:.MainMenuSettingsUIHandler
 ff2b987690e088cace9ca7605852ce1a Assembly-CSharp.dll:.MainMenuRecordsUIHandler
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.StickyPlatform
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Teleport
 dd5481137759597d614818793c90a7fe Assembly-CSharp.dll:.Splinter
-27c9dd2ff6943f0c32aa08c20639db09 Assembly-CSharp.dll:.CommonReferences

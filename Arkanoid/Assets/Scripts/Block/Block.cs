@@ -12,11 +12,16 @@ public abstract class Block : MonoBehaviour, IHittable {
 	private const int illuminationSteps = 10;
 	private const float fadedAlpha = 0.2f;
 
+	[SerializeField] private float sizeMagnitude;
+	private const float threshold = 0.02f; // назвать потом по другому
+	private const float timer = 0.5f;
+
 	protected void Start()
 	{
+		sizeMagnitude = GetComponent<BoxCollider2D> ().size.magnitude - threshold;
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 	}
-
+		
 	#region IHittable implementation
 
 	public abstract void Hit ();
@@ -26,6 +31,11 @@ public abstract class Block : MonoBehaviour, IHittable {
 	public Vector3 Position{ get { return transform.position; } }
 
 	#endregion
+
+	public bool isBlockNextTo(Vector3 otherBlockPos)
+	{
+		return  (transform.position - otherBlockPos).magnitude < sizeMagnitude;
+	}
 
 	#region illumination
 
@@ -40,7 +50,7 @@ public abstract class Block : MonoBehaviour, IHittable {
 			yield return new WaitForSeconds (illuminationTime / illuminationSteps);
 			var newAlpha = fadedAlpha + Mathf.Sign (i) * i * (1.0f - fadedAlpha) / illuminationSteps;
 			var color = spriteRenderer.color;
-			spriteRenderer.color = new Color (color.r, color.b, color.b, newAlpha);
+			spriteRenderer.color = new Color (color.r, color.g, color.b, newAlpha);
 		}
 	}
 
@@ -48,7 +58,9 @@ public abstract class Block : MonoBehaviour, IHittable {
 
 	protected void destroy()
 	{
-		GameManager.Instance.HandleDestroyedHittable (this);
+		GameManager.Instance.HittableDestroyed (this);
+		//Destroy(GetComponent<SpriteRenderer>());
+		//Destroy (gameObject, timer);
 		Destroy (gameObject);
 	}
 }
