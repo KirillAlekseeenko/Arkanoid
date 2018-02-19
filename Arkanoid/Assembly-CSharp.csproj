@@ -66,6 +66,9 @@
      <Compile Include="Assets\Scripts\Bonus\RedBonus.cs" />
      <Compile Include="Assets\Scripts\Border.cs" />
      <Compile Include="Assets\Scripts\Bullet.cs" />
+     <Compile Include="Assets\Scripts\Data\Records.cs" />
+     <Compile Include="Assets\Scripts\Data\Session.cs" />
+     <Compile Include="Assets\Scripts\Data\Settings.cs" />
      <Compile Include="Assets\Scripts\Enemy\BlueEnemy.cs" />
      <Compile Include="Assets\Scripts\Enemy\Enemy.cs" />
      <Compile Include="Assets\Scripts\Enemy\MovingEnemy.cs" />
@@ -73,11 +76,15 @@
      <Compile Include="Assets\Scripts\Enemy\SpecialEnemy.cs" />
      <Compile Include="Assets\Scripts\Enemy\Splinter.cs" />
      <Compile Include="Assets\Scripts\GameManager\AudioManager.cs" />
-     <Compile Include="Assets\Scripts\GameManager\CommonReferences.cs" />
+     <Compile Include="Assets\Scripts\GameManager\BonusSpawner.cs" />
+     <Compile Include="Assets\Scripts\GameManager\EnemySpawner.cs" />
+     <Compile Include="Assets\Scripts\GameManager\GameField.cs" />
      <Compile Include="Assets\Scripts\GameManager\GameManager.cs" />
+     <Compile Include="Assets\Scripts\GameManager\LevelManager.cs" />
+     <Compile Include="Assets\Scripts\GameManager\SpheresManager.cs" />
      <Compile Include="Assets\Scripts\IHittable.cs" />
      <Compile Include="Assets\Scripts\Level\Level.cs" />
-     <Compile Include="Assets\Scripts\Level\LevelGeneration.cs" />
+     <Compile Include="Assets\Scripts\Level\LevelList.cs" />
      <Compile Include="Assets\Scripts\MainCamera.cs" />
      <Compile Include="Assets\Scripts\MainMenu\MainMenuNameUIHandler.cs" />
      <Compile Include="Assets\Scripts\MainMenu\MainMenuRecordsUIHandler.cs" />
@@ -90,17 +97,19 @@
      <Compile Include="Assets\Scripts\PlatformBonusComponents\PlatformBonusComponent.cs" />
      <Compile Include="Assets\Scripts\PlatformBonusComponents\StickyPlatform.cs" />
      <Compile Include="Assets\Scripts\SphereMovement.cs" />
-     <Compile Include="Assets\Scripts\Static\MainMenuUtils.cs" />
+     <Compile Include="Assets\Scripts\Static\AnimationUtils.cs" />
+     <Compile Include="Assets\Scripts\Static\GameField.cs" />
+     <Compile Include="Assets\Scripts\Static\MathUtils.cs" />
      <Compile Include="Assets\Scripts\Static\SaveUtils.cs" />
-     <Compile Include="Assets\Scripts\Static\Utils.cs" />
-     <Compile Include="Assets\Scripts\Support\Records.cs" />
-     <Compile Include="Assets\Scripts\Support\Session.cs" />
-     <Compile Include="Assets\Scripts\Support\Settings.cs" />
      <Compile Include="Assets\Scripts\Teleport.cs" />
-     <Compile Include="Assets\Scripts\UI\OnButtonEffects.cs" />
-     <Compile Include="Assets\Scripts\UI\Transition.cs" />
+     <Compile Include="Assets\Scripts\UI\ButtonEffects.cs" />
+     <Compile Include="Assets\Scripts\UI\LevelTransition.cs" />
+     <Compile Include="Assets\Scripts\UI\ScoreText.cs" />
      <Compile Include="Assets\Scripts\UI\UIHandler.cs" />
-     <Compile Include="Assets\Scripts\UserInput.cs" />
+     <Compile Include="Assets\Scripts\UserInput\IInputType.cs" />
+     <Compile Include="Assets\Scripts\UserInput\KeyBoardInput.cs" />
+     <Compile Include="Assets\Scripts\UserInput\MobileInput.cs" />
+     <Compile Include="Assets\Scripts\UserInput\UserInput.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

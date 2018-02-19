@@ -5,16 +5,13 @@ using UnityEngine;
 public class Gun : PlatformBonusComponent {
 
 	private Bullet bulletPrefab;
-	private Vector3 leftSpawn;
-	private Vector3 rightSpawn;
 	private float reloadTime;
 
 	private Coroutine bulletSpawnerCoroutine;
 
-	protected void Start () {
+	void Start () {
 		bulletPrefab = GetComponent<Platform> ().BulletPrefab;
 		reloadTime = GetComponent<Platform> ().ReloadTime;
-
 		bulletSpawnerCoroutine = StartCoroutine (bulletSpawn ());
 	}
 

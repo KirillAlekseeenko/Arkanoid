@@ -10,17 +10,10 @@ public class Splinter : Enemy {
 	{
 		GetComponent<Rigidbody2D> ().velocity = getRandomSplinterVelocity () * speed;
 	}
-
-	void OnCollisionEnter2D(Collision2D other)
-	{
-		if (other.gameObject.layer == LayerMask.NameToLayer ("Platform")) {
-			GameManager.Instance.Lost ();
-		}
-	}
 	
 	private Vector2 getRandomSplinterVelocity()
 	{
 		var angle = Random.Range (-maxSplinterAngle, maxSplinterAngle);
-		return Utils.RotateVector (Vector2.down, angle);
+		return MathUtils.RotateVector (Vector2.down, angle);
 	}
 }

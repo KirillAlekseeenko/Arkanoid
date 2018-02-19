@@ -37,7 +37,7 @@ public class MainMenuRecordsUIHandler : MonoBehaviour {
 	public void OnBackButton()
 	{
 		var refs = GetComponent<ReferencesUIHandler> ();
-		MainMenuUtils.MakePanelTransition (refs.RecordsPanel, refs.MainPanel);
+		AnimationUtils.MakePanelTransition (refs.RecordsPanel, refs.MainPanel);
 	}
 
 }

@@ -6,7 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class UIHandler : MonoBehaviour {
 
-	[SerializeField] private Text scoreLabel;
+	public delegate void ButtonClicked();
+	public static event ButtonClicked ResumeButtonClicked;
+	public static event ButtonClicked RetryButtonClicked;
+	public static ButtonClicked MainMenuButtonClicked;
+
+	[SerializeField] private ScoreText scoreLabel;
 	[SerializeField] private Text pressBarLabel;
 	[SerializeField] private Text levelNumberLabel;
 	[SerializeField] private Text resultLabel;
@@ -18,11 +23,33 @@ public class UIHandler : MonoBehaviour {
 
 	[SerializeField] private Image lifeImagePrefab;
 
-	private Transition transition;
+	private LevelTransition transition;
+
+	void OnEnable()
+	{
+		GameManager.GameStartedEvent += OnStartGame;
+		GameManager.SessionEndedEvent += OnEndGame;
+		GameManager.GamePausedEvent += OnPauseGame;
+		GameManager.GameResumedEvent += OnResumeGame;
+		GameManager.LifeLostEvent += onLifeLost;
+		GameManager.LevelBuiltEvent += OnResetGame;
+		GreyBonus.GreyBonusAcquired += onLifeAdded;
+	}
+
+	void OnDisable()
+	{
+		GameManager.GameStartedEvent -= OnStartGame;
+		GameManager.SessionEndedEvent -= OnEndGame;
+		GameManager.GamePausedEvent -= OnPauseGame;
+		GameManager.GameResumedEvent -= OnResumeGame;
+		GameManager.LifeLostEvent -= onLifeLost;
+		GameManager.LevelBuiltEvent -= OnResetGame;
+		GreyBonus.GreyBonusAcquired -= onLifeAdded;
+	}
 
 	private void Start()
 	{
-		transition = GetComponent<Transition> ();
+		transition = GetComponent<LevelTransition> ();
 		UpdateScore ();
 	}
 
@@ -30,61 +57,76 @@ public class UIHandler : MonoBehaviour {
 
 	public void UpdateScore(int newScore = 0)
 	{
-		scoreLabel.text = "SCORE: " + newScore.ToString ();
+		scoreLabel.text = newScore.ToString ();
 	}
 
-	public void SetLife(int lifeCount)
+	private void onLifeAdded()
 	{
-		foreach (Transform image in lifePanel.transform) {
-			Destroy (image.gameObject);
+		StartCoroutine (addLife ());
+	}
+
+	private void onLifeLost()
+	{
+		StartCoroutine (removeLife ());
+	}
+
+	private IEnumerator addLife()
+	{
+		var newLifeImage = Instantiate (lifeImagePrefab, lifePanel.transform).gameObject;
+		yield return blinkLife (newLifeImage);
+	}
+
+	private IEnumerator removeLife()
+	{
+		var lifeImageToRemove = lifePanel.transform.GetChild (lifePanel.transform.childCount - 1).gameObject;
+		yield return blinkLife (lifeImageToRemove);
+		Destroy(lifeImageToRemove);
+	}
+
+	private IEnumerator blinkLife(GameObject lifeImage)
+	{
+		const int blinkCount = 4;
+		const float blinkTime = 1.0f;
+		for (int i = 0; i < blinkCount; i++) {
+			yield return new WaitForSecondsRealtime (blinkTime / (2 * blinkCount));
+			lifeImage.SetActive (false);
+			yield return new WaitForSecondsRealtime (blinkTime / (2 * blinkCount));
+			lifeImage.SetActive (true);
 		}
-		for (int i = 0; i < lifeCount; i++) {
-			Instantiate (lifeImagePrefab, lifePanel.transform);
-		}
-	}
-
-	public void AddLife()
-	{
-		Instantiate (lifeImagePrefab, lifePanel.transform);
-	}
-
-	public void RemoveLife()
-	{
-		Destroy(lifePanel.transform.GetChild (lifePanel.transform.childCount - 1).gameObject);
 	}
 
 	#endregion
 
 	#region common game methods
 
-	public void OnEndGame(bool result)
+	public void OnEndGame(GameResult result, Session session)
 	{
-		resultLabel.text = result? "WIN" : "LOST";
-		endGameScore.text = GameManager.CurrentSession.Name + " - " + GameManager.CurrentSession.Score + " points";
-		endGamePanel.GetComponent<Animator> ().SetBool ("Visible", true);
+		resultLabel.text = result == GameResult.WIN ? "WIN" : "LOST";
+		endGameScore.text = session.Name + " - " + session.Score + " points";
+		AnimationUtils.MakeAnimatorVisible (endGamePanel.GetComponent<Animator>());
 	}
 
 	public void OnStartGame()
 	{
-		pressBarLabel.gameObject.GetComponent<Animator> ().SetBool ("Visible", false);
-		levelNumberLabel.gameObject.GetComponent<Animator> ().SetBool ("Visible", false);
+		AnimationUtils.MakeAnimatorInvisible (pressBarLabel.GetComponent<Animator>());
+		AnimationUtils.MakeAnimatorInvisible (levelNumberLabel.GetComponent<Animator> ());
 	}
 
 	public void OnResetGame(int levelNumber)
 	{
-		pressBarLabel.gameObject.GetComponent<Animator> ().SetBool ("Visible", true);
+		AnimationUtils.MakeAnimatorVisible (pressBarLabel.GetComponent<Animator>());
 		levelNumberLabel.text = "LEVEL " + levelNumber.ToString ();
-		levelNumberLabel.gameObject.GetComponent<Animator> ().SetBool ("Visible", true);
+		AnimationUtils.MakeAnimatorVisible (levelNumberLabel.GetComponent<Animator> ());
 	}
 
 	public void OnPauseGame()
 	{
-		pausePanel.GetComponent<Animator> ().SetBool ("Visible", true);
+		AnimationUtils.MakeAnimatorVisible (pausePanel.GetComponent<Animator>());
 	}
 
 	public void OnResumeGame()
 	{
-		pausePanel.GetComponent<Animator> ().SetBool ("Visible", false);
+		AnimationUtils.MakeAnimatorInvisible (pausePanel.GetComponent<Animator>());
 	}
 
 	#endregion
@@ -106,18 +148,15 @@ public class UIHandler : MonoBehaviour {
 
 	public void OnMainMenuButton()
 	{
-		Time.timeScale = 1.0f;
-		SceneManager.LoadScene ("MainMenu");
+		MainMenuButtonClicked ();	
 	}
 	public void OnRetryButton()
 	{
-		Time.timeScale = 1.0f;
-		SceneManager.LoadScene ("GameScene");
+		RetryButtonClicked ();
 	}
 	public void OnResumeButton()
 	{
-		Debug.Log ("Pause");
-		GameManager.Instance.PauseHandle ();
+		ResumeButtonClicked ();
 	}
 
 	#endregion

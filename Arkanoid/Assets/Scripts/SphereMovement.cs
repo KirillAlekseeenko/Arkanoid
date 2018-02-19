@@ -9,21 +9,9 @@ public class SphereMovement : MonoBehaviour {
 	private Rigidbody2D rigidbodyComponent;
 
 	[SerializeField] private float minimumY;
-	private float xToMinimumY;
-
-	private bool isColliding = false;
-	private Vector2 firstCollidingBlockPosition;
-
-	ContactFilter2D contactFilter;
-	ContactPoint2D[] contactPoints;
-
-	private List<Block> blocksInContact;
 
 	Vector2? normal;
 	Collider2D blockHit;
-
-	private bool isOnWall = false;
-
 
 	public float VelocityMagnitude {
 		get {
@@ -37,41 +25,19 @@ public class SphereMovement : MonoBehaviour {
 
 	#region MonoBehaviour
 
+	void OnEnable()
+	{
+		GameManager.GameStartedEvent += FirstKick;
+	}
+
+	void OnDisable()
+	{
+		GameManager.GameStartedEvent -= FirstKick;
+	}
+
 	void Start () {
-		contactFilter.SetLayerMask(LayerMask.GetMask("Block"));
-		contactPoints = new ContactPoint2D[2];
 		rigidbodyComponent = GetComponent<Rigidbody2D> ();
-		xToMinimumY = Mathf.Sqrt (1 - minimumY * minimumY);
-	}
-
-	// debug
-	private	IEnumerator smooth()
-	{
-		isSmooth = true;
-		Time.timeScale = 0.1f;
-		yield return new WaitForSecondsRealtime (2.0f);
-		Time.timeScale = 1.0f;
-		isSmooth = false;
-	}
-
-	bool isSmooth = false;
-
-
-	void FixedUpdate()
-	{
-		if (normal.HasValue && blockHit != null) {
-			changeDirection (normal.Value);
-			blockHit.GetComponent<Block> ().Hit ();
-			normal = null;
-			blockHit = null;
-		}
-		RaycastHit2D hit;
-		float rayLength = GetComponent<Rigidbody2D> ().velocity.magnitude * Time.fixedDeltaTime * 3;
-		hit = Physics2D.Raycast (transform.position, GetComponent<Rigidbody2D> ().velocity.normalized, rayLength, LayerMask.GetMask ("Block"));
-		if (hit != null) {
-			normal = hit.normal;
-			blockHit = hit.collider;
-		}
+		StartCoroutine (movement ());
 	}
 
 	void OnCollisionEnter2D(Collision2D other)
@@ -109,39 +75,27 @@ public class SphereMovement : MonoBehaviour {
 		rigidbodyComponent.velocity = direction.normalized * velocityMagnitude;
 	}
 
-	private void correctCourse()
-	{
-		var velocity = rigidbodyComponent.velocity.normalized;
-
-		if (Mathf.Abs(velocity.y) < minimumY) {
-			rigidbodyComponent.velocity = new Vector2 (Mathf.Sign(velocity.x) * xToMinimumY, Mathf.Sign(velocity.y) * minimumY) * velocityMagnitude;
-		}
-	}
-
 	public void Stop()
 	{
 		rigidbodyComponent.velocity = Vector2.zero;
 	}
 
-	private void bounceSimulation(ContactPoint2D point)
+	private IEnumerator movement()
 	{
-		var other = point.collider;
-		var block = other.gameObject.GetComponent<Block> ();
-		if (block != null) {
-			if (isColliding) {
-				Debug.Log ("second");
-				if (block.isBlockNextTo (firstCollidingBlockPosition)) {
-					Debug.Log ("nextTo");
-					return;
-				}
-			} else {
-				Debug.Log ("first");
-				block.Hit ();
-				firstCollidingBlockPosition = block.transform.position;
-				isColliding = true;
+		while (true) {
+			yield return new WaitForFixedUpdate ();
+			float rayLength = rigidbodyComponent.velocity.magnitude * Time.fixedDeltaTime;
+			var origin = (Vector2)transform.position + rigidbodyComponent.velocity.normalized * GetComponent<CircleCollider2D> ().radius;
+			RaycastHit2D centerHit;
+			centerHit = Physics2D.Raycast (origin, rigidbodyComponent.velocity.normalized, rayLength, LayerMask.GetMask ("Block"));
+			if (centerHit.collider != null) {
+				changeDirection (centerHit.normal);
+				var vectorToNormal = centerHit.point - origin;
+				var newPositionVector = vectorToNormal + Vector2.Reflect (vectorToNormal.normalized, -centerHit.normal) * (rayLength - vectorToNormal.magnitude);
+				rigidbodyComponent.MovePosition (rigidbodyComponent.position + newPositionVector);
+				centerHit.collider.GetComponent<Block> ().Hit ();
 			}
 		}
-		changeDirection (point.normal);
 	}
 
 	private Vector2 getStraightNormal(Vector2 normal)

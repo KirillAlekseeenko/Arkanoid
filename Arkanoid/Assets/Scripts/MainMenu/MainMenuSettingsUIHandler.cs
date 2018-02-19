@@ -18,7 +18,7 @@ public class MainMenuSettingsUIHandler : MonoBehaviour {
 	{
 		SaveUtils.SettingsSaveUtility.SaveSettings (new Settings (audioSlider.value, musicSlider.value, effectsSlider.value));
 		var refs = GetComponent<ReferencesUIHandler> ();
-		MainMenuUtils.MakePanelTransition (refs.SettingsPanel, refs.MainPanel);
+		AnimationUtils.MakePanelTransition (refs.SettingsPanel, refs.MainPanel);
 	}
 
 	public void OnAudioValueChanged(float value)

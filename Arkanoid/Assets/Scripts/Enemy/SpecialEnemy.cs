@@ -4,14 +4,16 @@ using UnityEngine;
 
 public abstract class SpecialEnemy : MovingEnemy {
 
-	private const float gameFieldWidth = 6.0f;
-	private const float yFloorPosition = -5.0f;
+	private float gameFieldWidth;
+	private float yFloorPosition;
 
 	#region MonoBehaviour
 
 	protected new void Start()
 	{
 		base.Start ();
+		gameFieldWidth = GameField.Width;
+		yFloorPosition = -GameField.Height / 2;
 		StartCoroutine (checkBlocksPosition ());
 	}
 
@@ -21,9 +23,9 @@ public abstract class SpecialEnemy : MovingEnemy {
 
 	private IEnumerator checkBlocksPosition()
 	{
-		while (canSee) {
+		while (lowerThanAnyBlock) {
 			if (!isThereBlocksLower()) {
-				canSee = false;
+				lowerThanAnyBlock = false;
 				specialAction ();
 			}
 			yield return new WaitForSeconds (1.0f);

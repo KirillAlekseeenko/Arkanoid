@@ -6,19 +6,17 @@ public class AudioManager : MonoBehaviour {
 
 	private static AudioManager instance;
 
-	public static AudioManager Instance { get { return instance; } }
-
-	[Header("Parameters")]
+	[Header("Random pitch")]
 
 	[SerializeField] private float minPitch;
 	[SerializeField] private float maxPitch;
 
-	[Header("AudioSources")]
+	[Header("Audio sources")]
 
 	[SerializeField] private AudioSource effectSource;
 	[SerializeField] private AudioSource musicSource;
 
-	[Header("Audio Clips")]
+	[Header("Audio clips")]
 
 	[SerializeField] private AudioClip onHoverButtonClip;
 	[SerializeField] private AudioClip onClickButtonClip;
@@ -26,23 +24,42 @@ public class AudioManager : MonoBehaviour {
 	[SerializeField] private AudioClip onLifeLostClip;
 	[SerializeField] private AudioClip onLevelPassedClip;
 
+	[SerializeField] private AudioClip onBlockDestroyedClip;
 	[SerializeField] private AudioClip onBlockHitClip;
-	[SerializeField] private AudioClip onStaticBlockHitClip;
 	[SerializeField] private AudioClip onWallHitClip;
 	[SerializeField] private AudioClip onPlatformHitClip;
 
+	private float audioVolume;
 	private float musicVolume;
 	private float effectsVolume;
 
+	public static AudioManager Instance { get { return instance; } }
+
 	#region MonoBehaviour
 
-	private void Awake()
+	void OnEnable()
+	{
+		GameManager.LevelPassedEvent += PlayOnLevelPassedEffect;
+		GameManager.LifeLostEvent += PlayOnLifeLostEffect;
+		MovingEnemy.EnemyDestroyed += PlayOnBlockHitEffect;
+		Block.BlockDestroyed += PlayOnBlockHitEffect;
+	}
+
+	void OnDisable()
+	{
+		GameManager.LevelPassedEvent -= PlayOnLevelPassedEffect;
+		GameManager.LifeLostEvent -= PlayOnLifeLostEffect;
+		MovingEnemy.EnemyDestroyed -= PlayOnBlockHitEffect;
+		Block.BlockDestroyed -= PlayOnBlockHitEffect;
+	}
+		
+	void Awake()
 	{
 		if (instance == null)
 			instance = this;
 		else
 			Destroy (gameObject);
-
+		
 		DontDestroyOnLoad (gameObject);
 	}
 
@@ -76,16 +93,16 @@ public class AudioManager : MonoBehaviour {
 		effectSource.PlayOneShot (onLevelPassedClip);
 	}
 
-	public void PlayOnBlockHitEffect()
+	public void PlayOnBlockHitEffect(IHittable hittable)
 	{
 		randomizePitch ();
-		effectSource.PlayOneShot (onBlockHitClip);
+		effectSource.PlayOneShot (onBlockDestroyedClip);
 	}
 
 	public void PlayOnStaticBlockHitEffect()
 	{
 		randomizePitch ();
-		effectSource.PlayOneShot (onStaticBlockHitClip);
+		effectSource.PlayOneShot (onBlockHitClip);
 	}
 
 	public void PlayOnWallHitEffect()
@@ -106,20 +123,21 @@ public class AudioManager : MonoBehaviour {
 
 	public void SetAudioVolume(float value)
 	{
-		musicSource.volume = musicVolume * value;
-		effectSource.volume = effectsVolume * value;
+		audioVolume = value;
+		SetMusicVolume (musicVolume);
+		SetEffectsVolume (effectsVolume);
 	}
 
 	public void SetMusicVolume(float value)
 	{
 		musicVolume = value;
-		musicSource.volume = value;
+		musicSource.volume = value * audioVolume;
 	}
 
 	public void SetEffectsVolume(float value)
 	{
 		effectsVolume = value;
-		effectSource.volume = value;
+		effectSource.volume = value * audioVolume;
 	}
 
 	#endregion

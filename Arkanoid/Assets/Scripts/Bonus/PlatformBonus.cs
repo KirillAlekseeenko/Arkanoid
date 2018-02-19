@@ -6,12 +6,12 @@ public abstract class PlatformBonus : Bonus {
 
 	protected void addBonusToThePlatform<T> (Platform platform) where T : PlatformBonusComponent
 	{
-		PlatformBonusComponent bonusComponent = platform.gameObject.GetComponent<PlatformBonusComponent > ();
-		if (bonusComponent == null) {
+		PlatformBonusComponent currentBonusComponent = platform.gameObject.GetComponent<PlatformBonusComponent> ();
+		if (currentBonusComponent == null) {
 			platform.gameObject.AddComponent<T> ();
 		} else {
-			if (!(bonusComponent is T)) {
-				bonusComponent.RemoveBonus ();
+			if (!(currentBonusComponent is T)) {
+				currentBonusComponent.RemoveBonus ();
 				platform.gameObject.AddComponent<T> ();
 			}
 		}

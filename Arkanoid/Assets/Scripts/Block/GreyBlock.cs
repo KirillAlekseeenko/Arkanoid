@@ -20,8 +20,7 @@ public class GreyBlock : DynamicBlock {
 			AudioManager.Instance.PlayOnStaticBlockHitEffect ();
 			illumination ();
 		} else {
-			AudioManager.Instance.PlayOnBlockHitEffect ();
-			this.destroy ();
+			base.Hit ();
 		}
 	}
 }

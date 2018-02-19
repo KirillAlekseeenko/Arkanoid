@@ -37,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1407474441324628}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.208, z: 0}
+  m_LocalPosition: {x: 0, y: -4.38, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -75,8 +75,8 @@ EdgeCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.12}
-  m_EdgeRadius: 0.43
+  m_Offset: {x: 0, y: 0}
+  m_EdgeRadius: 0.12
   m_Points:
   - {x: -0.5, y: 0}
   - {x: 0.5, y: 0}
@@ -93,6 +93,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 7
   maxDirectionAngle: 30
+  defaultSprite: {fileID: 21300000, guid: 6eb47cd097ce54f8ea71b7b7de76fd03, type: 3}
+  damagedSprite: {fileID: 21300000, guid: 397ceebeed14b42c681f84db1d448477, type: 3}
   bulletPrefab: {fileID: 114128620287530108, guid: 9c7b52139f5df47829f950d0bf808e1d,
     type: 2}
   bulletSpawnHeight: 0.5

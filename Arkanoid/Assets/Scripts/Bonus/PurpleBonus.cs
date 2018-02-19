@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PurpleBonus : Bonus {
 
+	public static event BonusAcquired PurpleBonusAcquired;
+
 	public override void GetBonus (Platform platform)
 	{
-		GameManager.Instance.CreatePortal ();
+		PurpleBonusAcquired ();
 	}
 }

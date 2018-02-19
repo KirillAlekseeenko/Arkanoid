@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class RedEnemy : SpecialEnemy {
 
-	private Vector3 desiredDirection;
-	private Transform platformTransform;
-
 	[SerializeField] private float forceSpeedMultiplier;
 	[SerializeField] private float turnSpeed; // angle in degrees per second
 
 	private const float coroutineFrameLength = 0.2f;
+
+	private Vector3 desiredDirection;
+	private Transform platformTransform;
 
 	#region MonoBehaviour
 

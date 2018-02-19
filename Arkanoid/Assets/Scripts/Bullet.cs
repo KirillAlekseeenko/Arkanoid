@@ -5,18 +5,18 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 
 	[SerializeField] private float speed;
-	private float xPos;
+	private float initialXPos;
 
 	#region MonoBehaviour
 
 	void Start()
 	{
-		xPos = transform.position.x;
+		initialXPos = transform.position.x;
 	}
 
 	void Update () {
 		transform.Translate (Vector3.up * speed * Time.deltaTime);
-		transform.position = new Vector3 (xPos, transform.position.y);
+		transform.position = new Vector3 (initialXPos, transform.position.y);
 	}
 
 	void OnTriggerEnter2D(Collider2D other)

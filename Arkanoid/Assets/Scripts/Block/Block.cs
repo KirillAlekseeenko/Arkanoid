@@ -4,6 +4,9 @@ using UnityEngine;
 
 public abstract class Block : MonoBehaviour, IHittable {
 
+	public delegate void BlockEvent(IHittable hittable);
+	public static event BlockEvent BlockDestroyed;
+
 	[SerializeField] protected int rewardPoints;
 
 	protected SpriteRenderer spriteRenderer;
@@ -12,13 +15,8 @@ public abstract class Block : MonoBehaviour, IHittable {
 	private const int illuminationSteps = 10;
 	private const float fadedAlpha = 0.2f;
 
-	[SerializeField] private float sizeMagnitude;
-	private const float threshold = 0.02f; // назвать потом по другому
-	private const float timer = 0.5f;
-
 	protected void Start()
 	{
-		sizeMagnitude = GetComponent<BoxCollider2D> ().size.magnitude - threshold;
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 	}
 		
@@ -32,19 +30,14 @@ public abstract class Block : MonoBehaviour, IHittable {
 
 	#endregion
 
-	public bool isBlockNextTo(Vector3 otherBlockPos)
-	{
-		return  (transform.position - otherBlockPos).magnitude < sizeMagnitude;
-	}
-
 	#region illumination
 
 	protected virtual void illumination()
 	{
-		StartCoroutine (fadeInOut ());
+		StartCoroutine (fadeInFadeOut ());
 	}
 
-	private IEnumerator fadeInOut()
+	private IEnumerator fadeInFadeOut()
 	{
 		for (int i = -illuminationSteps + 1; i <= illuminationSteps; i++) {
 			yield return new WaitForSeconds (illuminationTime / illuminationSteps);
@@ -58,9 +51,7 @@ public abstract class Block : MonoBehaviour, IHittable {
 
 	protected void destroy()
 	{
-		GameManager.Instance.HittableDestroyed (this);
-		//Destroy(GetComponent<SpriteRenderer>());
-		//Destroy (gameObject, timer);
+		BlockDestroyed (this);
 		Destroy (gameObject);
 	}
 }

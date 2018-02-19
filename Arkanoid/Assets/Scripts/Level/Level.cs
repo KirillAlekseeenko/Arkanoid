@@ -14,5 +14,12 @@ public class Level {
 	public Transform StaticBlocks { get { return staticBlocks; } }
 
 	public int Number { get { return number; } }
+
+	public Level(Transform destroyableBlocks, Transform staticBlocks, int number)
+	{
+		this.destroyableBlocks = destroyableBlocks;
+		this.staticBlocks = staticBlocks;
+		this.number = number;
+	}
 }
 

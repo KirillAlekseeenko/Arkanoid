@@ -102,7 +102,7 @@ MonoBehaviour:
   speed: 1
   rewardPoints: 1
   forceSpeedMultiplier: 3
-  turnSpeed: 0.2
+  turnSpeed: 20
 --- !u!212 &212186971879861972
 SpriteRenderer:
   m_ObjectHideFlags: 1

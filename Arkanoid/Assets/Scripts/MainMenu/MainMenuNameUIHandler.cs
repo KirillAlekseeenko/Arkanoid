@@ -24,13 +24,12 @@ public class MainMenuNameUIHandler : MonoBehaviour {
 	public void OnConfirmButton()
 	{
 		SaveUtils.PlayerNameSaveUtility.SaveName (nameField.text);
-		GameManager.CurrentSession = new Session (nameField.text);
 		SceneManager.LoadScene ("GameScene");
 	}
 
 	public void OnBackButton()
 	{
 		var refs = GetComponent<ReferencesUIHandler> ();
-		MainMenuUtils.MakePanelTransition (refs.NamePanel, refs.MainPanel);
+		AnimationUtils.MakePanelTransition (refs.NamePanel, refs.MainPanel);
 	}
 }

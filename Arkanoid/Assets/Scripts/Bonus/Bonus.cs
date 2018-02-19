@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class Bonus : MonoBehaviour {
 
+	public delegate void BonusAcquired();
+
 	[SerializeField] protected float speed;
 
 	protected void Update () {
