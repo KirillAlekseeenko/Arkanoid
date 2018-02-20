@@ -23,9 +23,9 @@ public abstract class SpecialEnemy : MovingEnemy {
 
 	private IEnumerator checkBlocksPosition()
 	{
-		while (lowerThanAnyBlock) {
+		while (!lowerThanAnyBlock) {
 			if (!isThereBlocksLower()) {
-				lowerThanAnyBlock = false;
+				lowerThanAnyBlock = true;
 				specialAction ();
 			}
 			yield return new WaitForSeconds (1.0f);

@@ -5,14 +5,18 @@ using UnityEngine;
 [System.Serializable]
 public class Records : IEnumerable
 {
-	public int MaxSessionCount { get{ return 10; } }
+	public int MaxSessionCount { get { return 10; } }
 
 	[SerializeField] private List<Session> sessionList;
+
+	public Session this[int index] { get { return sessionList [index]; } }
+	public int Count { get { return sessionList.Count; } }
 
 	public Records()
 	{
 		sessionList = new List<Session>();
 	}
+
 	public void AddSession(Session session)
 	{
 		int index = 0;
@@ -26,9 +30,6 @@ public class Records : IEnumerable
 			}
 		}
 	}
-
-	public Session this[int index] { get { return sessionList [index]; } }
-	public int Count { get{ return sessionList.Count; } }
 
 	#region IEnumerable implementation
 

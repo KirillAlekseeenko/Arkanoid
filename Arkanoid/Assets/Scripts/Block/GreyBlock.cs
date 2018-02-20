@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GreyBlock : DynamicBlock {
 
-	[SerializeField] protected int initialCounter;
+	[SerializeField] protected int initialCounter; // how many times block can be hit
 
 	protected int counter;
 

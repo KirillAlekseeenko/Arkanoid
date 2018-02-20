@@ -11,10 +11,11 @@ public class MovingEnemy : Enemy, IHittable {
 
 	protected Vector3 direction = Vector3.down;
 
-	protected bool lowerThanAnyBlock = true;
+	protected bool lowerThanAnyBlock = false;
 
 	private const float visionUpdateTime = 0.1f;
 	private float visionDistance;
+
 	private Movement movement;
 
 	#region MonoBehaviour
@@ -51,7 +52,7 @@ public class MovingEnemy : Enemy, IHittable {
 
 	private IEnumerator moveDown()
 	{
-		while (lowerThanAnyBlock) {
+		while (!lowerThanAnyBlock) {
 			var tData = new VisionData ();
 			tData.canMoveDown = !isObstacleOnTheWay (Vector3.down);
 			tData.canMoveUp = !isObstacleOnTheWay (Vector3.up);
@@ -108,11 +109,11 @@ public class MovingEnemy : Enemy, IHittable {
 	{
 		private bool transitionProhibited = false;
 
-		private bool rightPriority;  
-		private int inversedCount = 0;
+		private bool rightPriority;  // tries to find a way to the platform from left to right if true
+		private int inversedCount = 0;  // priority inverses if the enemy can't move with current priority
 		private bool inversedPriority { get { return (inversedCount % 2) != 0; } }
 
-		private int recursiveCallsCount = 0;
+		private int recursiveCallsCount = 0; 
 
 		private Vector3 currentDirection;
 
@@ -145,30 +146,41 @@ public class MovingEnemy : Enemy, IHittable {
 			var downPriorityMultiplier = localDownPriority ? 1 : -1;
 			var rightPriorityMultiplier = localRightPriority ? 1 : -1;
 
-			if (tData.stuck || recursiveCallsCount > 10) {                                       // enemy stuck in blocks
-				if(currentDirection.Equals(Vector3.down * downPriorityMultiplier))
-					return Vector3.right * rightPriorityMultiplier + Vector3.up * downPriorityMultiplier;
+			var right = Vector3.right * rightPriorityMultiplier;
+			var left = -right;
+			var down = Vector3.down * downPriorityMultiplier;
+			var up = -down;
+
+			var canMoveDown = localDownPriority ? tData.canMoveDown : tData.canMoveUp;
+			var canMoveUp = localDownPriority ? tData.canMoveUp : tData.canMoveDown;
+			var canMoveToTheRight = localRightPriority ? tData.canMoveToTheRight : tData.canMoveToTheLeft;
+			var canMoveToTheLeft = localRightPriority ? tData.canMoveToTheLeft : tData.canMoveToTheRight;
+			var wallOnTheRight = localRightPriority ? tData.wallOnTheRight : tData.wallOnTheLeft;
+
+			if (tData.stuck || recursiveCallsCount > 10) {    // enemy stuck in blocks
+				if(currentDirection.Equals(down))
+					return right + up;
 				else
-					return Vector3.left * rightPriorityMultiplier + Vector3.up * downPriorityMultiplier;
+					return left + up;
 			}
 
 			if (inversedCount > 0
-				&& currentDirection.Equals (Vector3.down * downPriorityMultiplier)
-				&& (localRightPriority ? tData.canMoveToTheLeft : tData.canMoveToTheRight)) {
+				&& currentDirection.Equals (down)
+				&& (canMoveToTheLeft)) {
 				inversedCount--;
 				recursiveCallsCount++;
 				return getDirection (tData);
 			}
 
-			if ((localDownPriority ? tData.canMoveDown : tData.canMoveUp) && !currentDirection.Equals (Vector3.up * downPriorityMultiplier)) {
-				return Vector3.down * downPriorityMultiplier;
-			} else if ((localRightPriority ? tData.canMoveToTheRight : tData.canMoveToTheLeft)) {
-				return Vector3.right * rightPriorityMultiplier;
-			} else if ((localRightPriority ? tData.wallOnTheRight : tData.wallOnTheLeft)) {
+			if ((canMoveDown) && !currentDirection.Equals (up)) {
+				return down;
+			} else if ((canMoveToTheRight)) {
+				return right;
+			} else if ((wallOnTheRight)) {
 				rightPriority = !rightPriority;
-				return Vector3.left * rightPriorityMultiplier;
-			} else if (localDownPriority ? tData.canMoveUp : tData.canMoveDown) {
-				return Vector3.up * downPriorityMultiplier;
+				return left;
+			} else if (canMoveUp) {
+				return up;
 			} else {
 				recursiveCallsCount++;
 				inversedCount++;

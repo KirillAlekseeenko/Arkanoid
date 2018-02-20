@@ -63,7 +63,8 @@ public class SpheresManager : MonoBehaviour {
 		for (int i = -1; i <= 1; i+=2) {
 			sphereCount++;
 			var newSphere = Instantiate (spherePrefab, pos, Quaternion.identity, spheres);
-			newSphere.GetComponent<Rigidbody2D>().velocity = MathUtils.RotateVector (direction, 15.0f * Mathf.Deg2Rad * i);
+			newSphere.VelocityMagnitude = currentVelocity;
+			newSphere.Kick(MathUtils.RotateVector (direction, 15.0f * Mathf.Deg2Rad * i));
 		}
 	}
 
@@ -93,12 +94,14 @@ public class SpheresManager : MonoBehaviour {
 
 	private IEnumerator updateSphereVelocity()
 	{
+		const float deltatime = 0.5f;
+		
 		while (true) {
 			currentVelocity += acceleration;
 			foreach (Transform sphereTransform in spheres) {
 				sphereTransform.gameObject.GetComponent<SphereMovement> ().VelocityMagnitude = currentVelocity;
 			}
-			yield return new WaitForSeconds (0.5f);
+			yield return new WaitForSeconds (deltatime);
 		}
 	}
 

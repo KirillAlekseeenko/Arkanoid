@@ -14,6 +14,11 @@ public class MobileInput : IInputType {
 	private bool right;
 	private int swipeCounter;
 
+	public MobileInput()
+	{
+		touchesDictionary = new Dictionary<int, TouchInfo> ();
+	}
+
 	private void handleTouchInput()
 	{
 		if (frameCount.HasValue && frameCount == Time.frameCount)  // this function must be called only once per frame
@@ -105,9 +110,9 @@ public class MobileInput : IInputType {
 
 	#endregion
 
-	private struct TouchInfo
+	private class TouchInfo
 	{
-		private const float swipeDistanceInInches = 0.7f;
+		private const float swipeDistanceInInches = 1.0f;
 		private const float swipeTime = 0.5f;
 
 		private Vector2 firstPosition;
@@ -116,7 +121,11 @@ public class MobileInput : IInputType {
 		public bool isSwipe(Touch updatedTouch)
 		{
 			time += updatedTouch.deltaTime;
-			return (Vector2.Distance (updatedTouch.position, firstPosition) >= swipeDistanceInInches * Screen.dpi) && (time <= swipeTime);
+			var result = (Vector2.Distance (updatedTouch.position, firstPosition) >= swipeDistanceInInches * Screen.dpi) && (time <= swipeTime);
+			if (result) {
+				firstPosition = updatedTouch.position;
+			}
+			return result;
 		}
 
 		public TouchInfo(Touch touch)

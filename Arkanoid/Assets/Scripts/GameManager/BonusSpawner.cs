@@ -40,16 +40,16 @@ public class BonusSpawner : MonoBehaviour {
 		}
 	}
 
-	private void spawnBonus(Vector3 position)
-	{
-		var randIndex = Random.Range (0, bonusPrefabs.Length);
-		Instantiate (bonusPrefabs[randIndex].gameObject, position, Quaternion.identity, bonuses);
-	}
-
 	private void onCleanLevel()
 	{
 		foreach (Transform bonus in bonuses) {
 			Destroy (bonus.gameObject);
 		}
+	}
+
+	private void spawnBonus(Vector3 position)
+	{
+		var randIndex = Random.Range (0, bonusPrefabs.Length);
+		Instantiate (bonusPrefabs[randIndex].gameObject, position, Quaternion.identity, bonuses);
 	}
 }

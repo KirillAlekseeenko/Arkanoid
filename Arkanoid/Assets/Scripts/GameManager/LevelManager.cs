@@ -31,7 +31,7 @@ public class LevelManager : MonoBehaviour {
 	private void onBuildLevel(int levelNumber)
 	{
 		currentLevel = levelList.GetLevelByNumber (levelNumber);
-		currentLevel.DestroyableBlocks.parent.gameObject.SetActive (true);
+		currentLevel.LevelTransform.gameObject.SetActive (true);
 		blocksNumber = currentLevel.DestroyableBlocks.childCount;
 	}
 
@@ -50,6 +50,6 @@ public class LevelManager : MonoBehaviour {
 
 	private void onCleanLevel()
 	{
-		currentLevel.DestroyableBlocks.parent.gameObject.SetActive (false);
+		currentLevel.LevelTransform.gameObject.SetActive (false);
 	}
 }

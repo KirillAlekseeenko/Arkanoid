@@ -35,10 +35,6 @@ public class StickyPlatform : PlatformBonusComponent {
 		}
 		Destroy (this);
 	}
-		
-	#endregion
-
-	#region implemented virtual members of PlatformBonusComponent
 
 	public override void SpecialAction ()
 	{

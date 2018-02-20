@@ -42,7 +42,7 @@ public class Platform : MonoBehaviour {
 	{
 		GameManager.GameStartedEvent += activate;
 		GameManager.LevelPassedEvent += deactivate;
-		GameManager.LifeLostEvent += setDamage;
+		GameManager.LifeLostEvent += setDamaged;
 		GameManager.LifeLostEvent += deactivate;
 		GameManager.LevelCleanedEvent += onLevelClean;
 	}
@@ -51,7 +51,7 @@ public class Platform : MonoBehaviour {
 	{
 		GameManager.GameStartedEvent -= activate;
 		GameManager.LevelPassedEvent -= deactivate;
-		GameManager.LifeLostEvent -= setDamage;
+		GameManager.LifeLostEvent -= setDamaged;
 		GameManager.LifeLostEvent -= deactivate;
 		GameManager.LevelCleanedEvent -= onLevelClean;
 		disableInput ();
@@ -141,7 +141,7 @@ public class Platform : MonoBehaviour {
 		disableInput ();
 	}
 
-	private void setDamage()
+	private void setDamaged()
 	{
 		damageCoroutine = StartCoroutine (damage());
 	}
@@ -161,6 +161,7 @@ public class Platform : MonoBehaviour {
 
 	private IEnumerator damage()
 	{
+		const float deltatime = 0.3f;
 		bool damagedSpriteSet = false;
 		
 		while (true) {
@@ -170,7 +171,7 @@ public class Platform : MonoBehaviour {
 				GetComponent<SpriteRenderer> ().sprite = defaultSprite;
 			}
 			damagedSpriteSet = !damagedSpriteSet;
-			yield return new WaitForSecondsRealtime (0.3f);
+			yield return new WaitForSecondsRealtime (deltatime);
 		}
 	}
 

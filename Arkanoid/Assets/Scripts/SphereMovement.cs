@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SphereMovement : MonoBehaviour {
 
-	[SerializeField] private float velocityMagnitude;
+	[SerializeField] private float _velocityMagnitude;
 
 	private Rigidbody2D rigidbodyComponent;
 
@@ -13,17 +13,53 @@ public class SphereMovement : MonoBehaviour {
 	Vector2? normal;
 	Collider2D blockHit;
 
+	private bool _stopped = false;
+
+	private bool stopped
+	{
+		get {
+			return _stopped; 
+		}
+		set {
+			if (value == _stopped)
+				return;
+			if (value) {
+				velocityMagnitude *= 0.01f;
+			} else {
+				velocityMagnitude *= 100f;
+			}
+			_stopped = value;
+		}
+	}
+
+	private float velocityMagnitude
+	{
+		get {
+			return _velocityMagnitude;
+		}
+		set{
+			rigidbodyComponent.velocity *= (value / _velocityMagnitude);
+			_velocityMagnitude = value;
+		}
+	}
+
 	public float VelocityMagnitude {
 		get {
 			return velocityMagnitude; 
 		} 
-		set { 
-			rigidbodyComponent.velocity *= (value / velocityMagnitude);
+		set {
+			if (stopped)
+				return;
 			velocityMagnitude = value;
 		} 
 	}
 
 	#region MonoBehaviour
+
+	void Awake()
+	{
+		rigidbodyComponent = GetComponent<Rigidbody2D> ();
+	}
 
 	void OnEnable()
 	{
@@ -35,8 +71,8 @@ public class SphereMovement : MonoBehaviour {
 		GameManager.GameStartedEvent -= FirstKick;
 	}
 
-	void Start () {
-		rigidbodyComponent = GetComponent<Rigidbody2D> ();
+	void Start () 
+	{
 		StartCoroutine (movement ());
 	}
 
@@ -82,19 +118,26 @@ public class SphereMovement : MonoBehaviour {
 
 	private IEnumerator movement()
 	{
+		float stoppedRayLength = velocityMagnitude;
+		
 		while (true) {
 			yield return new WaitForFixedUpdate ();
-			float rayLength = rigidbodyComponent.velocity.magnitude * Time.fixedDeltaTime;
-			var origin = (Vector2)transform.position + rigidbodyComponent.velocity.normalized * GetComponent<CircleCollider2D> ().radius;
+			float rayLength;
+			if (stopped)
+				rayLength = stoppedRayLength;
+			else
+				rayLength = velocityMagnitude * Time.fixedDeltaTime;
+			var origin = rigidbodyComponent.position;
 			RaycastHit2D centerHit;
 			centerHit = Physics2D.Raycast (origin, rigidbodyComponent.velocity.normalized, rayLength, LayerMask.GetMask ("Block"));
 			if (centerHit.collider != null) {
+				stoppedRayLength = rayLength;
+				stopped = true;
 				changeDirection (centerHit.normal);
-				var vectorToNormal = centerHit.point - origin;
-				var newPositionVector = vectorToNormal + Vector2.Reflect (vectorToNormal.normalized, -centerHit.normal) * (rayLength - vectorToNormal.magnitude);
-				rigidbodyComponent.MovePosition (rigidbodyComponent.position + newPositionVector);
+				rigidbodyComponent.MovePosition (rigidbodyComponent.position + (centerHit.point - rigidbodyComponent.position) * 0.7f);
 				centerHit.collider.GetComponent<Block> ().Hit ();
-			}
+			} else
+				stopped = false;
 		}
 	}
 

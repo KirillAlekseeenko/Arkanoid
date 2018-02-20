@@ -37,7 +37,7 @@ public class UserInput : MonoBehaviour {
 
 		#if UNITY_IOS
 
-		inputSource = new MobileInput();
+		input = new MobileInput();
 
 		#endif
 

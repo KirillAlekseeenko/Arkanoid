@@ -50,7 +50,6 @@ public class UIHandler : MonoBehaviour {
 	private void Start()
 	{
 		transition = GetComponent<LevelTransition> ();
-		UpdateScore ();
 	}
 
 	#region HUD methods

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class describes bonuses that add some special feature to the platform
+/// </summary>
 public abstract class PlatformBonus : Bonus {
 
 	protected void addBonusToThePlatform<T> (Platform platform) where T : PlatformBonusComponent

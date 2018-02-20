@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Bonus : MonoBehaviour {
 
-	public delegate void BonusAcquired();
+	public delegate void BonusAcquired(); // when the platform picks up bonus
 
 	[SerializeField] protected float speed;
 

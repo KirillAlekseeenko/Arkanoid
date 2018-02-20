@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour {
 
 	[Header("UI")]
 
-	[SerializeField] private UIHandler ui;
+	[SerializeField] private UIHandler UI;
 
 	[Header("Balance")]
 
@@ -101,14 +101,14 @@ public class GameManager : MonoBehaviour {
 			yield break;
 		}
 
-		yield return ui.ScreenFadeIn ();
+		yield return UI.ScreenFadeIn ();
 
 		LevelCleanedEvent ();
 		if(result == GameResult.NEXTLEVEL)
 			levelNumber++;
 		LevelBuiltEvent (levelNumber);
 
-		yield return ui.ScreenFadeOut ();
+		yield return UI.ScreenFadeOut ();
 
 		Time.timeScale = 1;
 		UserInput.StartGame += onStartGameInput;
@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour {
 	private void HittableDestroyed(IHittable hittable)
 	{
 		score += hittable.RewardPoints;
-		ui.UpdateScore (score);
+		UI.UpdateScore (score);
 	}
 
 	private void AdditionalLife()

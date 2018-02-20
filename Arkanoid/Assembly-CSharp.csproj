@@ -78,7 +78,6 @@
      <Compile Include="Assets\Scripts\GameManager\AudioManager.cs" />
      <Compile Include="Assets\Scripts\GameManager\BonusSpawner.cs" />
      <Compile Include="Assets\Scripts\GameManager\EnemySpawner.cs" />
-     <Compile Include="Assets\Scripts\GameManager\GameField.cs" />
      <Compile Include="Assets\Scripts\GameManager\GameManager.cs" />
      <Compile Include="Assets\Scripts\GameManager\LevelManager.cs" />
      <Compile Include="Assets\Scripts\GameManager\SpheresManager.cs" />

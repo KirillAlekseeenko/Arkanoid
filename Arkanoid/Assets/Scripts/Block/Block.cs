@@ -11,10 +11,6 @@ public abstract class Block : MonoBehaviour, IHittable {
 
 	protected SpriteRenderer spriteRenderer;
 
-	private const float illuminationTime = 0.2f;
-	private const int illuminationSteps = 10;
-	private const float fadedAlpha = 0.2f;
-
 	protected void Start()
 	{
 		spriteRenderer = GetComponent<SpriteRenderer> ();
@@ -39,9 +35,13 @@ public abstract class Block : MonoBehaviour, IHittable {
 
 	private IEnumerator fadeInFadeOut()
 	{
-		for (int i = -illuminationSteps + 1; i <= illuminationSteps; i++) {
-			yield return new WaitForSeconds (illuminationTime / illuminationSteps);
-			var newAlpha = fadedAlpha + Mathf.Sign (i) * i * (1.0f - fadedAlpha) / illuminationSteps;
+		const float time = 0.2f;
+		const int steps = 10;
+		const float fadedAlpha = 0.2f;
+
+		for (int i = -steps + 1; i <= steps; i++) {
+			yield return new WaitForSeconds (time / steps);
+			var newAlpha = fadedAlpha + Mathf.Sign (i) * i * (1.0f - fadedAlpha) / steps;
 			var color = spriteRenderer.color;
 			spriteRenderer.color = new Color (color.r, color.g, color.b, newAlpha);
 		}
