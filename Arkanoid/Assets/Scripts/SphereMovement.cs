@@ -8,27 +8,30 @@ public class SphereMovement : MonoBehaviour {
 
 	private Rigidbody2D rigidbodyComponent;
 
-	[SerializeField] private float minimumY;
-
 	Vector2? normal;
 	Collider2D blockHit;
 
-	private bool _stopped = false;
+	private bool stopped = false;
 
-	private bool stopped
+	private bool afterWallCollision = false;
+	private ContactPoint2D[] wallContactPoint;
+
+	private bool canInteractWithPlatform = true;
+
+	public bool Stopped
 	{
 		get {
-			return _stopped; 
+			return stopped; 
 		}
-		set {
-			if (value == _stopped)
+		private set {
+			if (value == stopped)
 				return;
 			if (value) {
 				velocityMagnitude *= 0.01f;
 			} else {
 				velocityMagnitude *= 100f;
 			}
-			_stopped = value;
+			stopped = value;
 		}
 	}
 
@@ -48,16 +51,30 @@ public class SphereMovement : MonoBehaviour {
 			return velocityMagnitude; 
 		} 
 		set {
-			if (stopped)
+			if (Stopped)
 				return;
 			velocityMagnitude = value;
 		} 
+	}
+
+	public bool CanInteractWithPlatform {
+		get {
+			return canInteractWithPlatform;
+		}
+		set {
+			canInteractWithPlatform = value;
+			if (!value) {
+				StartCoroutine(TurnOnInteractionWithPlatform (0.2f));
+			}
+		}
 	}
 
 	#region MonoBehaviour
 
 	void Awake()
 	{
+		CanInteractWithPlatform = true;
+		wallContactPoint = new ContactPoint2D[1];
 		rigidbodyComponent = GetComponent<Rigidbody2D> ();
 	}
 
@@ -80,6 +97,8 @@ public class SphereMovement : MonoBehaviour {
 	{
 		if (other.gameObject.layer == LayerMask.NameToLayer ("Wall")) {
 			AudioManager.Instance.PlayOnWallHitEffect ();
+			afterWallCollision = true;
+			other.GetContacts (wallContactPoint);
 		}
 	}
 
@@ -93,17 +112,14 @@ public class SphereMovement : MonoBehaviour {
 		}
 	}
 		
-
 	#endregion
 
 	public void FirstKick()
 	{
-		var randVariable = Random.Range (0, 2);
-		if (randVariable == 0) {
-			rigidbodyComponent.velocity = new Vector2 (1, 1).normalized * velocityMagnitude; 
-		} else {
-			rigidbodyComponent.velocity = new Vector2 (-1, 1).normalized * velocityMagnitude; 
-		}
+		var randomAngle = Random.Range (-45, 45);
+		var velocity = MathUtils.RotateVector (Vector2.up, randomAngle * Mathf.Deg2Rad);
+
+		rigidbodyComponent.velocity = velocity * velocityMagnitude;
 	}
 
 	public void Kick(Vector2 direction)
@@ -123,25 +139,36 @@ public class SphereMovement : MonoBehaviour {
 		while (true) {
 			yield return new WaitForFixedUpdate ();
 			float rayLength;
-			if (stopped)
+			if (Stopped)
 				rayLength = stoppedRayLength;
 			else
 				rayLength = velocityMagnitude * Time.fixedDeltaTime;
+			
+			if (afterWallCollision) {
+				afterWallCollision = false;
+				var hit = Physics2D.Raycast (wallContactPoint[0].point, rigidbodyComponent.velocity.normalized, rayLength, LayerMask.GetMask ("Block"));
+				if (hit.collider != null && hit.collider.OverlapPoint (rigidbodyComponent.position)) {
+					changeDirection (hit.normal);
+					hit.collider.GetComponent<Block> ().Hit ();
+					continue;
+				}
+			}
+
 			var origin = rigidbodyComponent.position;
 			RaycastHit2D centerHit;
 			centerHit = Physics2D.Raycast (origin, rigidbodyComponent.velocity.normalized, rayLength, LayerMask.GetMask ("Block"));
 			if (centerHit.collider != null) {
 				stoppedRayLength = rayLength;
-				stopped = true;
+				Stopped = true;
 				changeDirection (centerHit.normal);
 				rigidbodyComponent.MovePosition (rigidbodyComponent.position + (centerHit.point - rigidbodyComponent.position) * 0.7f);
 				centerHit.collider.GetComponent<Block> ().Hit ();
 			} else
-				stopped = false;
+				Stopped = false;
 		}
 	}
 
-	private Vector2 getStraightNormal(Vector2 normal)
+	private Vector2 getStraightNormal(Vector2 normal) 
 	{
 		if (Mathf.Abs (normal.x) > Mathf.Abs (normal.y)) {
 			return new Vector2 (Mathf.Sign (normal.x) * 1.0f, 0);
@@ -152,6 +179,12 @@ public class SphereMovement : MonoBehaviour {
 	private void changeDirection(Vector2 outNormal)
 	{
 		rigidbodyComponent.velocity = Vector2.Reflect (rigidbodyComponent.velocity, getStraightNormal(-outNormal));
+	}
+
+	private IEnumerator TurnOnInteractionWithPlatform(float period)
+	{
+		yield return new WaitForSeconds (period);
+		canInteractWithPlatform = true;
 	}
 }
 

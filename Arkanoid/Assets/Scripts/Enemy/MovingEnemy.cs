@@ -13,7 +13,7 @@ public class MovingEnemy : Enemy, IHittable {
 
 	protected bool lowerThanAnyBlock = false;
 
-	private const float visionUpdateTime = 0.1f;
+	private const float visionUpdateTime = 0.05f;
 	private float visionDistance;
 
 	private Movement movement;
@@ -49,6 +49,8 @@ public class MovingEnemy : Enemy, IHittable {
 	#endregion
 
 	#region base movement
+
+	Vector3? prePos;
 
 	private IEnumerator moveDown()
 	{

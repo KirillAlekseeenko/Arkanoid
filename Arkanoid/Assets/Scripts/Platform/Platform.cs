@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour {
 
+	public delegate void PlatformEvent ();
+	public static event PlatformEvent SphereSticked;
+
 	private bool activated = false;
 
 	[SerializeField] private float speed;
@@ -17,6 +20,8 @@ public class Platform : MonoBehaviour {
 	[SerializeField] private Bullet bulletPrefab;
 	[SerializeField] private float bulletSpawnHeight;
 	[SerializeField] private float reloadTime;
+	[SerializeField] private float timeToRemove;
+	[SerializeField] private float offset;
 
 	private Coroutine damageCoroutine;
 
@@ -27,14 +32,19 @@ public class Platform : MonoBehaviour {
 	private float yDirection { get { return tangentMaxDirectionAngle * HalfLength; } }
 	private float tangentMaxDirectionAngle;
 
-	public float HalfLength { get { return Mathf.Abs(GetComponent<EdgeCollider2D> ().points [0].x); } }
+	private Vector3 analogInputPosition;
+	private bool analogInput = false;
+
+	public float HalfLength { get { return GetComponent<SpriteRenderer> ().bounds.extents.x; } }
 
 	public Bullet BulletPrefab { get { return bulletPrefab; } }
 
 	public float ReloadTime { get { return reloadTime; } }
 
-	public Vector3 LeftSpawn { get { return transform.position + new Vector3 (-HalfLength, bulletSpawnHeight); } }
-	public Vector3 RightSpawn { get { return transform.position + new Vector3 (HalfLength, bulletSpawnHeight); } }
+	public float TimeToRemove { get { return timeToRemove; } }
+
+	public Vector3 LeftSpawn { get { return transform.position + new Vector3 (-HalfLength + offset, bulletSpawnHeight); } }
+	public Vector3 RightSpawn { get { return transform.position + new Vector3 (HalfLength - offset, bulletSpawnHeight); } }
 
 	#region MonoBehaviour
 
@@ -57,7 +67,8 @@ public class Platform : MonoBehaviour {
 		disableInput ();
 	}
 
-	void Start () {
+	void Start ()
+	{
 		initialPosition = transform.position;
 		xRightWallPosition = GameField.Width / 2;
 		tangentMaxDirectionAngle = Mathf.Tan (maxDirectionAngle * Mathf.Deg2Rad);
@@ -65,29 +76,31 @@ public class Platform : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
+		if (!activated) {
+			return;
+		}
+		
 		if (other.gameObject.layer == LayerMask.NameToLayer ("Bonus")) {
 			other.gameObject.GetComponent<Bonus> ().GetBonus (this);
 			Destroy (other.gameObject);
 		}
-	}
 
-	void OnCollisionEnter2D(Collision2D other)
-	{
-		if (!activated) {
-			return;
-		}
 		var sphere = other.gameObject.GetComponent<SphereMovement> ();
-		if (sphere != null && sphere.transform.position.y >= transform.position.y) {
+		if (sphere != null && sphere.CanInteractWithPlatform && isSphereCanBeKicked(sphere)) {
 			var direction = new Vector2 (sphere.transform.position.x - transform.position.x, yDirection);
 			var sticky = GetComponent<StickyPlatform> ();
 			if (sticky == null) {
+				sphere.CanInteractWithPlatform = false;
 				AudioManager.Instance.PlayOnPlatformHitEffect ();
 				sphere.Kick (direction);
 			} else {
 				sphere.Stop ();
 				sticky.AddSphere (sphere, direction);
+				if(SphereSticked != null)
+					SphereSticked ();
 			}
 		}
+
 	}
 
 	#endregion
@@ -96,16 +109,20 @@ public class Platform : MonoBehaviour {
 
 	private void enableInput()
 	{
-		UserInput.MoveLeft += moveLeft;
-		UserInput.MoveRight += moveRight;
-		UserInput.SpecialAction += specialAction;
+		DiscreteInput.MoveLeft += moveLeft;
+		DiscreteInput.MoveRight += moveRight;
+		DiscreteInput.SpecialAction += specialAction;
+		AnalogInput.Move += move;
 	}
 
 	private void disableInput()
 	{
-		UserInput.MoveLeft -= moveLeft;
-		UserInput.MoveRight -= moveRight;
-		UserInput.SpecialAction -= specialAction;
+		DiscreteInput.MoveLeft -= moveLeft;
+		DiscreteInput.MoveRight -= moveRight;
+		DiscreteInput.SpecialAction -= specialAction;
+		AnalogInput.Move -= move;
+		analogInputPosition = initialPosition;
+		analogInput = false;
 	}
 
 	private void moveLeft()
@@ -118,6 +135,22 @@ public class Platform : MonoBehaviour {
 	{
 		transform.Translate (Vector3.right * Time.deltaTime * speed, Space.World);
 		clampPosition ();
+	}
+
+	private void move(Vector3 pos)
+	{
+		analogInput = true;
+		analogInputPosition = pos;
+		if (Mathf.Abs(analogInputPosition.x - transform.position.x) > 0.001f && analogInput) {
+			if (Mathf.Abs (analogInputPosition.x - transform.position.x) < speed * Time.deltaTime) {
+				transform.Translate (analogInputPosition.x - transform.position.x, 0, 0, Space.World);
+			} else if (analogInputPosition.x < transform.position.x) {
+				moveLeft ();
+			} else
+				moveRight ();
+
+			clampPosition ();
+		}
 	}
 
 	private void specialAction()
@@ -179,5 +212,11 @@ public class Platform : MonoBehaviour {
 	{
 		var clampXValue = xRightWallPosition - HalfLength;
 		transform.position = new Vector3(Mathf.Clamp(transform.position.x, -clampXValue , clampXValue), transform.position.y);
+	}
+
+	private bool isSphereCanBeKicked(SphereMovement sphere)
+	{
+		//return sphere.transform.position.y > transform.position.y || Mathf.Abs (sphere.transform.position.x - transform.position.x) > HalfLength;
+		return true;
 	}
 }

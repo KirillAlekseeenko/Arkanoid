@@ -9,13 +9,16 @@ public class UIHandler : MonoBehaviour {
 	public delegate void ButtonClicked();
 	public static event ButtonClicked ResumeButtonClicked;
 	public static event ButtonClicked RetryButtonClicked;
-	public static ButtonClicked MainMenuButtonClicked;
+	public static event ButtonClicked MainMenuButtonClicked;
+	public static event ButtonClicked PauseButtonClicked;
 
 	[SerializeField] private ScoreText scoreLabel;
 	[SerializeField] private Text pressBarLabel;
 	[SerializeField] private Text levelNumberLabel;
 	[SerializeField] private Text resultLabel;
 	[SerializeField] private Text endGameScore;
+
+	[SerializeField] private Button pauseButton;
 
 	[SerializeField] private GameObject pausePanel;
 	[SerializeField] private GameObject endGamePanel;
@@ -33,6 +36,9 @@ public class UIHandler : MonoBehaviour {
 		GameManager.GameResumedEvent += OnResumeGame;
 		GameManager.LifeLostEvent += onLifeLost;
 		GameManager.LevelBuiltEvent += OnResetGame;
+		GameManager.AddLife += onLifeAdded;
+		GameManager.LifeLostEvent += OnLevelEnd;
+		GameManager.LevelPassedEvent += OnLevelEnd;
 		GreyBonus.GreyBonusAcquired += onLifeAdded;
 	}
 
@@ -44,6 +50,9 @@ public class UIHandler : MonoBehaviour {
 		GameManager.GameResumedEvent -= OnResumeGame;
 		GameManager.LifeLostEvent -= onLifeLost;
 		GameManager.LevelBuiltEvent -= OnResetGame;
+		GameManager.AddLife -= onLifeAdded;
+		GameManager.LifeLostEvent -= OnLevelEnd;
+		GameManager.LevelPassedEvent -= OnLevelEnd;
 		GreyBonus.GreyBonusAcquired -= onLifeAdded;
 	}
 
@@ -101,7 +110,7 @@ public class UIHandler : MonoBehaviour {
 	public void OnEndGame(GameResult result, Session session)
 	{
 		resultLabel.text = result == GameResult.WIN ? "WIN" : "LOST";
-		endGameScore.text = session.Name + " - " + session.Score + " points";
+		endGameScore.text = "LEVEL " + session.LevelNumber + "\n\n" + session.Score + " points";
 		AnimationUtils.MakeAnimatorVisible (endGamePanel.GetComponent<Animator>());
 	}
 
@@ -109,6 +118,7 @@ public class UIHandler : MonoBehaviour {
 	{
 		AnimationUtils.MakeAnimatorInvisible (pressBarLabel.GetComponent<Animator>());
 		AnimationUtils.MakeAnimatorInvisible (levelNumberLabel.GetComponent<Animator> ());
+		AnimationUtils.MakeAnimatorVisible (pauseButton.GetComponent<Animator> ());
 	}
 
 	public void OnResetGame(int levelNumber)
@@ -118,14 +128,21 @@ public class UIHandler : MonoBehaviour {
 		AnimationUtils.MakeAnimatorVisible (levelNumberLabel.GetComponent<Animator> ());
 	}
 
+	public void OnLevelEnd()
+	{
+		AnimationUtils.MakeAnimatorInvisible (pauseButton.GetComponent<Animator> ());
+	}
+
 	public void OnPauseGame()
 	{
 		AnimationUtils.MakeAnimatorVisible (pausePanel.GetComponent<Animator>());
+		AnimationUtils.MakeAnimatorInvisible (pauseButton.GetComponent<Animator> ());
 	}
 
 	public void OnResumeGame()
 	{
 		AnimationUtils.MakeAnimatorInvisible (pausePanel.GetComponent<Animator>());
+		AnimationUtils.MakeAnimatorVisible (pauseButton.GetComponent<Animator> ());
 	}
 
 	#endregion
@@ -144,6 +161,11 @@ public class UIHandler : MonoBehaviour {
 	#endregion
 
 	#region button callbacks
+
+	public void onPauseButton()
+	{
+		PauseButtonClicked ();
+	}
 
 	public void OnMainMenuButton()
 	{

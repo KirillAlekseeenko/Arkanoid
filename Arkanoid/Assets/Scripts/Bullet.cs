@@ -5,18 +5,21 @@ using UnityEngine;
 public class Bullet : MonoBehaviour {
 
 	[SerializeField] private float speed;
-	private float initialXPos;
 
 	#region MonoBehaviour
 
-	void Start()
+	void OnEnable()
 	{
-		initialXPos = transform.position.x;
+		GameManager.LevelCleanedEvent += onCleanLevel;
+	}
+
+	void OnDisable()
+	{
+		GameManager.LevelCleanedEvent -= onCleanLevel;
 	}
 
 	void Update () {
 		transform.Translate (Vector3.up * speed * Time.deltaTime);
-		transform.position = new Vector3 (initialXPos, transform.position.y);
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -29,4 +32,9 @@ public class Bullet : MonoBehaviour {
 	}
 
 	#endregion
+
+	private void onCleanLevel()
+	{
+		Destroy (gameObject);
+	}
 }

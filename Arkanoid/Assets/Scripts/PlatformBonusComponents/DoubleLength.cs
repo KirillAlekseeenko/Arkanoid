@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DoubleLength : PlatformBonusComponent {
+
+	private const float scaleModifier = 1.5f;
 	
 	#region implemented abstract members of PlatformBonusComponent
 
 	public override void RemoveBonus ()
 	{
-		scale (0.5f);
+		scale (1 / scaleModifier);
 		Destroy (this);
 	}
 
 	#endregion
 
 	void Start () {
-		scale (2.0f);
+		scale (scaleModifier);
 	}
 
 	private void scale(float multiplier)
@@ -31,11 +33,7 @@ public class DoubleLength : PlatformBonusComponent {
 	}
 	private void scaleCollider(float multiplier)
 	{
-		var points = GetComponent<EdgeCollider2D> ().points;
-		var newPoints = new Vector2[points.Length];
-		for (int i = 0; i < points.Length; i++) {
-			newPoints [i] = new Vector2 (points [i].x * multiplier, points [i].y);
-		}
-		GetComponent<EdgeCollider2D> ().points = newPoints;
+		var size = GetComponent<CapsuleCollider2D> ().size;
+		GetComponent<CapsuleCollider2D> ().size = new Vector2 (size.x * multiplier, size.y);
 	}
 }

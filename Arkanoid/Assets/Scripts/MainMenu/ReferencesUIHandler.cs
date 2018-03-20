@@ -8,9 +8,11 @@ public class ReferencesUIHandler : MonoBehaviour {
 	[SerializeField] private Animator recordsPanel;
 	[SerializeField] private Animator settingsPanel;
 	[SerializeField] private Animator namePanel;
+	[SerializeField] private Animator infoPanel;
 
 	public Animator MainPanel { get { return mainPanel; } }
 	public Animator RecordsPanel { get { return recordsPanel; } }
 	public Animator SettingsPanel { get { return settingsPanel; } }
 	public Animator NamePanel { get { return namePanel; } }
+	public Animator InfoPanel { get { return infoPanel; } }
 }

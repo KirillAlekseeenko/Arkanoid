@@ -25,9 +25,10 @@ public class MainMenuUIHandler : MonoBehaviour {
 		var refs = GetComponent<ReferencesUIHandler> ();
 		AnimationUtils.MakePanelTransition (refs.MainPanel, refs.SettingsPanel);
 	}
-	public void OnQuitButtonDown()
+	public void OnInfoGameButton()
 	{
-		Application.Quit ();
+		var refs = GetComponent<ReferencesUIHandler> ();
+		AnimationUtils.MakePanelTransition (refs.MainPanel, refs.InfoPanel);
 	}
 }
 	

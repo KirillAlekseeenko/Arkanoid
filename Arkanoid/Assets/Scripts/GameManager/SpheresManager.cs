@@ -7,6 +7,9 @@ public class SpheresManager : MonoBehaviour {
 	public delegate void SphereEvents();
 	public static event SphereEvents AllSpheresLost;
 
+	public delegate void SphereSpawnEvent(SphereMovement sphere);
+	public static event SphereSpawnEvent SphereSpawned;
+
 	private int sphereCount = 1;
 
 	[SerializeField] private SphereMovement mainSphere;
@@ -58,19 +61,38 @@ public class SpheresManager : MonoBehaviour {
 		if (spheres.childCount > 1) {
 			return;
 		}
-		Vector2 direction = spheres.GetChild (0).GetComponent<Rigidbody2D> ().velocity;
-		Vector3 pos = spheres.GetChild (0).transform.position;
-		for (int i = -1; i <= 1; i+=2) {
-			sphereCount++;
-			var newSphere = Instantiate (spherePrefab, pos, Quaternion.identity, spheres);
-			newSphere.VelocityMagnitude = currentVelocity;
-			newSphere.Kick(MathUtils.RotateVector (direction, 15.0f * Mathf.Deg2Rad * i));
+		StartCoroutine (spawnSpheresCoroutine ());
+	}
+
+	private IEnumerator spawnSpheresCoroutine()
+	{
+		var mainSphere = spheres.GetChild (0).GetComponent<SphereMovement> ();
+		var direction = mainSphere.GetComponent<Rigidbody2D> ().velocity;
+		var position = mainSphere.transform.position;
+
+		while (true) {
+			if (mainSphere.Stopped) {
+				yield return null;
+			} else {
+				for (int i = -1; i <= 1; i+=2) {
+					sphereCount++;
+					var newSphere = Instantiate (spherePrefab, position, Quaternion.identity, spheres);
+					newSphere.VelocityMagnitude = currentVelocity;
+					newSphere.Kick(MathUtils.RotateVector (direction, 15.0f * Mathf.Deg2Rad * i));
+					if(SphereSpawned != null)
+						SphereSpawned (newSphere);
+				}
+				yield break;
+			}
 		}
 	}
 
 	private void slowSpheres()
 	{
-		currentVelocity /= 2;
+		currentVelocity /= 1.3f;
+		if (currentVelocity < initialVelocity / 2) {
+			currentVelocity = initialVelocity / 2;
+		}
 	}
 
 	private void onCleanLevel()

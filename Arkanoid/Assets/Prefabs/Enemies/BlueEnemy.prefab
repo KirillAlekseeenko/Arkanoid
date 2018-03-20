@@ -99,11 +99,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31db4716f0fb642679ee3ba3c55e862d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  speed: 0.8
   rewardPoints: 1
   splinterPrefab: {fileID: 50670239159239606, guid: bad7acdab1dd1479e89288c071f711cf,
     type: 2}
-  splinterCount: 6
+  splinterCount: 4
 --- !u!212 &212228425053059726
 SpriteRenderer:
   m_ObjectHideFlags: 1

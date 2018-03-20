@@ -15,6 +15,11 @@ public abstract class Block : MonoBehaviour, IHittable {
 	{
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 	}
+
+	void OnDisable()
+	{
+		GameManager.LevelCleanedEvent -= onClean;
+	}
 		
 	#region IHittable implementation
 
@@ -39,12 +44,16 @@ public abstract class Block : MonoBehaviour, IHittable {
 		const int steps = 10;
 		const float fadedAlpha = 0.2f;
 
+		GameManager.LevelCleanedEvent += onClean;
+
 		for (int i = -steps + 1; i <= steps; i++) {
 			yield return new WaitForSeconds (time / steps);
 			var newAlpha = fadedAlpha + Mathf.Sign (i) * i * (1.0f - fadedAlpha) / steps;
 			var color = spriteRenderer.color;
 			spriteRenderer.color = new Color (color.r, color.g, color.b, newAlpha);
 		}
+
+		GameManager.LevelCleanedEvent -= onClean;
 	}
 
 	#endregion
@@ -53,5 +62,12 @@ public abstract class Block : MonoBehaviour, IHittable {
 	{
 		BlockDestroyed (this);
 		Destroy (gameObject);
+	}
+
+	private void onClean()
+	{
+		var color = spriteRenderer.color;
+		spriteRenderer.color = new Color (color.r, color.g, color.b, 1.0f);
+		GameManager.LevelCleanedEvent -= onClean;
 	}
 }

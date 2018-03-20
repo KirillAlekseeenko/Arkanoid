@@ -8,6 +8,6 @@ public abstract class PlatformBonusComponent : MonoBehaviour {
 
 	public virtual void SpecialAction ()
 	{
-		Debug.LogWarning ("Platform hasn't any special action");
+		
 	}
 }

@@ -1,9 +1,9 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj" RefactoringSettings.EnableRefactorings="True">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Enemy/MovingEnemy.cs">
+  <MonoDevelop.Ide.Workbench>
     <Files>
-      <File FileName="Assets/Scripts/Bonus/Bonus.cs" Line="7" Column="75" />
-      <File FileName="Assets/Scripts/Enemy/MovingEnemy.cs" Line="55" Column="31" />
+      <File FileName="Assets/Scripts/GameManager/BonusSpawner.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/PlatformBonusComponents/StickyPlatform.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

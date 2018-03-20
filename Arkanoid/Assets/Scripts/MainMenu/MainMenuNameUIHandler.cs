@@ -23,6 +23,9 @@ public class MainMenuNameUIHandler : MonoBehaviour {
 		
 	public void OnConfirmButton()
 	{
+		if (nameField.text == "") {
+			nameField.text = "PLAYER";
+		}
 		SaveUtils.PlayerNameSaveUtility.SaveName (nameField.text);
 		SceneManager.LoadScene ("GameScene");
 	}

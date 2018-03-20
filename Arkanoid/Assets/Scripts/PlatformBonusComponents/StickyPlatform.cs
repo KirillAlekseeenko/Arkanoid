@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StickyPlatform : PlatformBonusComponent {
 
-	private const float pauseTime = 1.0f;
+	private const float pauseTime = 0.2f;
 
 	private bool isKickPossible = true;
 
@@ -17,7 +17,17 @@ public class StickyPlatform : PlatformBonusComponent {
 		spheresOnThePlatform = new LinkedList<StickySphereInfo> ();
 	}
 
-	void Update()
+	void OnEnable()
+	{
+		SpheresManager.SphereSpawned += onSphereSpawn;
+	}
+
+	void OnDisable()
+	{
+		SpheresManager.SphereSpawned -= onSphereSpawn;
+	}
+
+	void LateUpdate()
 	{
 		foreach (var sphereInfo in spheresOnThePlatform) {
 			sphereInfo.sphere.transform.position = transform.position + sphereInfo.positionRelativeToThePlatform;
@@ -58,7 +68,7 @@ public class StickyPlatform : PlatformBonusComponent {
 	{
 		var halfLength = GetComponent<Platform> ().HalfLength;
 		var xRelativePos = Mathf.Clamp(sphere.transform.position.x - transform.position.x, -halfLength, halfLength);
-		var yRelativePos = GetComponent<EdgeCollider2D> ().edgeRadius + sphere.GetComponent<CircleCollider2D>().radius;
+		var yRelativePos = GetComponent<CapsuleCollider2D> ().size.y / 2 + sphere.GetComponent<CircleCollider2D>().radius;
 		sphere.transform.position = transform.position + new Vector3 (xRelativePos, yRelativePos);
 	}
 
@@ -66,6 +76,7 @@ public class StickyPlatform : PlatformBonusComponent {
 	{
 		var sphereInfo = spheresOnThePlatform.First.Value;
 		spheresOnThePlatform.RemoveFirst ();
+		sphereInfo.sphere.CanInteractWithPlatform = false;
 		sphereInfo.sphere.Kick (sphereInfo.direction);
 	}
 
@@ -76,7 +87,16 @@ public class StickyPlatform : PlatformBonusComponent {
 		isKickPossible = true;
 	}
 
-	private struct StickySphereInfo
+	private void onSphereSpawn (SphereMovement sphere)
+	{
+		if (spheresOnThePlatform.Count > 0) {
+			sphere.CanInteractWithPlatform = false;
+			AddSphere (sphere, spheresOnThePlatform.First.Value.direction);
+		}
+	}
+
+
+	private class StickySphereInfo
 	{
 		public SphereMovement sphere;
 		public Vector2 direction;

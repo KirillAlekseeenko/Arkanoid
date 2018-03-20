@@ -99,9 +99,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 963b26eb272c64f5db5cec092a22be6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  speed: 0.8
   rewardPoints: 1
-  forceSpeedMultiplier: 3
+  forceSpeedMultiplier: 5
   turnSpeed: 20
 --- !u!212 &212186971879861972
 SpriteRenderer:

@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour {
 	public delegate void SessionResult(GameResult result, Session session);
 	public static event SessionResult SessionEndedEvent;
 
+	public delegate void ScoreBonus();
+	public static event ScoreBonus AddLife;
+
 	[Header("UI")]
 
 	[SerializeField] private UIHandler UI;
@@ -26,14 +29,18 @@ public class GameManager : MonoBehaviour {
 	[Header("Balance")]
 
 	[SerializeField] private int initialLifeCount;
+	[SerializeField] private int scoreToGetLife;
 
 	private int levelNumber;
 
 	private int lifeCount;
 	private string playerName;
 	private int score;
+	private int lifeScore;
+
 
 	private bool isPaused = false;
+	private bool isEnded = false;
 
 	#region MonoBehaviour
 
@@ -42,36 +49,41 @@ public class GameManager : MonoBehaviour {
 		lifeCount = initialLifeCount;
 		levelNumber = 1;
 		score = 0;
+		lifeScore = 0;
 	}
 
 	void OnEnable()
 	{
-		UserInput.Pause += onPauseGameInput;
-		UserInput.StartGame += onStartGameInput;
+		DiscreteInput.Pause += onPauseGameInput;
+		DiscreteInput.StartGame += onStartGameInput;
 		MovingEnemy.EnemyDestroyed += HittableDestroyed;
 		Block.BlockDestroyed += HittableDestroyed;
 		Enemy.PlatformDestroyed += onLifeLost;
 		UIHandler.ResumeButtonClicked += onPauseGameInput;
 		UIHandler.MainMenuButtonClicked += OnMainMenuButtonClick;
 		UIHandler.RetryButtonClicked += onRetryButtonClick;
+		UIHandler.PauseButtonClicked += onPauseGameInput;
 		GreyBonus.GreyBonusAcquired += AdditionalLife;
 		SpheresManager.AllSpheresLost += onLifeLost;
 		LevelManager.LevelIsClear += onLevelPassed;
+		AddLife += AdditionalLife;
 	}
 
 	void OnDisable()
 	{
-		UserInput.Pause -= onPauseGameInput;
-		UserInput.StartGame -= onStartGameInput;
+		DiscreteInput.Pause -= onPauseGameInput;
+		DiscreteInput.StartGame -= onStartGameInput;
 		MovingEnemy.EnemyDestroyed -= HittableDestroyed;
 		Block.BlockDestroyed -= HittableDestroyed;
 		Enemy.PlatformDestroyed -= onLifeLost;
 		UIHandler.ResumeButtonClicked -= onPauseGameInput;
 		UIHandler.MainMenuButtonClicked -= OnMainMenuButtonClick;
 		UIHandler.RetryButtonClicked -= onRetryButtonClick;
+		UIHandler.PauseButtonClicked -= onPauseGameInput;
 		GreyBonus.GreyBonusAcquired -= AdditionalLife;
 		SpheresManager.AllSpheresLost -= onLifeLost;
 		LevelManager.LevelIsClear -= onLevelPassed;
+		AddLife -= AdditionalLife;
 	}
 
 	void Start()
@@ -91,13 +103,13 @@ public class GameManager : MonoBehaviour {
 
 	private IEnumerator resetLevelCoroutine(GameResult result)
 	{
-		UserInput.Pause -= onPauseGameInput;
+		DiscreteInput.Pause -= onPauseGameInput;
 		Time.timeScale = 0;
 
 		yield return new WaitForSecondsRealtime (1.0f);
 
 		if (result == GameResult.WIN || result == GameResult.LOST) {
-			SessionEndedEvent (result, new Session(playerName, score));
+			SessionEndedEvent (result, new Session(playerName, score, levelNumber));
 			yield break;
 		}
 
@@ -111,8 +123,9 @@ public class GameManager : MonoBehaviour {
 		yield return UI.ScreenFadeOut ();
 
 		Time.timeScale = 1;
-		UserInput.StartGame += onStartGameInput;
-		UserInput.Pause += onPauseGameInput;
+		DiscreteInput.StartGame += onStartGameInput;
+		DiscreteInput.Pause += onPauseGameInput;
+		isEnded = false;
 	}
 
 	#endregion
@@ -121,6 +134,11 @@ public class GameManager : MonoBehaviour {
 
 	private void onLifeLost()
 	{
+		if (!isEnded)
+			isEnded = true;
+		else
+			return;
+		
 		LifeLostEvent ();
 		lifeCount--;
 		if (lifeCount == 0)
@@ -141,7 +159,7 @@ public class GameManager : MonoBehaviour {
 	private void saveResults()
 	{
 		var records = SaveUtils.RecordsSaveUtility.LoadRecords ();
-		records.AddSession (new Session(playerName, score));
+		records.AddSession (new Session(playerName, score, levelNumber));
 		SaveUtils.RecordsSaveUtility.SaveRecords (records);
 	}
 
@@ -151,7 +169,7 @@ public class GameManager : MonoBehaviour {
 
 	private void onStartGameInput()
 	{
-		UserInput.StartGame -= onStartGameInput;
+		DiscreteInput.StartGame -= onStartGameInput;
 		GameStartedEvent ();
 	}
 
@@ -198,6 +216,11 @@ public class GameManager : MonoBehaviour {
 	private void HittableDestroyed(IHittable hittable)
 	{
 		score += hittable.RewardPoints;
+		lifeScore += hittable.RewardPoints;
+		if (lifeScore >= scoreToGetLife) {
+			lifeScore = 0;
+			AddLife ();
+		}
 		UI.UpdateScore (score);
 	}
 

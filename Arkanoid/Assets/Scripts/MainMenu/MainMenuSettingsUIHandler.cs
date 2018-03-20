@@ -9,6 +9,8 @@ public class MainMenuSettingsUIHandler : MonoBehaviour {
 	[SerializeField] private Slider musicSlider;
 	[SerializeField] private Slider effectsSlider;
 
+	[SerializeField] private Toggle analogInputToggle;
+
 	private void Start()
 	{
 		fillSettings ();
@@ -16,7 +18,7 @@ public class MainMenuSettingsUIHandler : MonoBehaviour {
 
 	public void OnBackButton()
 	{
-		SaveUtils.SettingsSaveUtility.SaveSettings (new Settings (audioSlider.value, musicSlider.value, effectsSlider.value));
+		SaveUtils.SettingsSaveUtility.SaveSettings (new Settings (audioSlider.value, musicSlider.value, effectsSlider.value, analogInputToggle.isOn));
 		var refs = GetComponent<ReferencesUIHandler> ();
 		AnimationUtils.MakePanelTransition (refs.SettingsPanel, refs.MainPanel);
 	}
@@ -43,6 +45,7 @@ public class MainMenuSettingsUIHandler : MonoBehaviour {
 		audioSlider.value = settings.AudioVolume;
 		musicSlider.value = settings.MusicVolume;
 		effectsSlider.value = settings.EffectsVolume;
+		analogInputToggle.isOn = settings.isAnalogInputOn;
 
 		AudioManager.Instance.SetMusicVolume (settings.MusicVolume);
 		AudioManager.Instance.SetEffectsVolume (settings.EffectsVolume);

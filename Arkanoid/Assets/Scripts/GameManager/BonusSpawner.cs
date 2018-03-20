@@ -5,6 +5,8 @@ using UnityEngine;
 public class BonusSpawner : MonoBehaviour {
 
 	[SerializeField] private Bonus[] bonusPrefabs;
+	[SerializeField] private Bonus purpleBonusPrefab;
+	[SerializeField] [Range(0, 1)] private float purpleBonusChance;
 	[SerializeField] private int scoreToGetRandomReward;
 
 	private Transform bonuses;
@@ -49,7 +51,15 @@ public class BonusSpawner : MonoBehaviour {
 
 	private void spawnBonus(Vector3 position)
 	{
-		var randIndex = Random.Range (0, bonusPrefabs.Length);
-		Instantiate (bonusPrefabs[randIndex].gameObject, position, Quaternion.identity, bonuses);
+		Bonus bonusToSpawn;
+		var randNumber = Random.value;
+		if (randNumber < purpleBonusChance) {
+			bonusToSpawn = purpleBonusPrefab;
+		} else {
+			var randIndex = Random.Range (0, bonusPrefabs.Length);
+			bonusToSpawn = bonusPrefabs [randIndex];
+		}
+
+		Instantiate (bonusToSpawn.gameObject, position, Quaternion.identity, bonuses);
 	}
 }
